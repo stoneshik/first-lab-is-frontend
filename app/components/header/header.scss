@@ -1,0 +1,147 @@
+$breakpoint-md: 980px;
+$color-bg: #fff;
+$color-text: #111827;
+$color-muted: #6b7280;
+$color-primary: #0ea5e9;
+
+.header {
+    background: $color-bg;
+    border-bottom: 1px solid #e5e7eb;
+    position: relative;
+    z-index: 10;
+
+    &__inner.container {
+        width: 1024px;
+        margin: 0 auto;
+        padding: 0.5rem 0.7rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__brand {
+        display: flex;
+        flex-direction: column;
+        margin-right: 60px;
+    }
+
+    &__logo {
+        font-weight: 700;
+        color: $color-text;
+        text-decoration: none;
+        &:hover {
+        text-decoration: underline;
+        }
+    }
+
+    &__subtitle {
+        font-size: 0.9rem;
+        color: $color-muted;
+    }
+
+    &__burger {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 2rem;
+        height: 2rem;
+        position: relative;
+
+        &-box {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        &-inner {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: $color-text;
+            transition: all 0.3s ease;
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: $color-text;
+                transition: all 0.3s ease;
+            }
+            &::before {
+                transform: translateY(-8px);
+            }
+            &::after {
+                transform: translateY(8px);
+            }
+        }
+
+        &--open .header__burger-inner {
+            background: transparent;
+            &::before {
+                transform: rotate(45deg);
+            }
+            &::after {
+                transform: rotate(-45deg);
+            }
+        }
+    }
+
+    &__nav {
+        display: flex;
+        gap: 0.2rem;
+
+        a {
+            text-decoration: none;
+        }
+    }
+
+    &__link {
+        color: $color-muted;
+        padding: 0.4rem 0.6rem;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: #f3f4f6;
+            color: $color-text;
+        }
+
+        &--active {
+            background: $color-primary;
+            color: #fff;
+            font-weight: 600;
+        }
+    }
+
+    @media (max-width: $breakpoint-md) {
+        &__burger {
+            display: block;
+        }
+
+        &__nav {
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: $color-bg;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        &__nav--open {
+            max-height: 400px;
+        }
+
+        &__link {
+            padding: 0.75rem 1rem;
+        }
+    }
+}
