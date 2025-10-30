@@ -1,16 +1,17 @@
+import type { JSX } from "react";
 import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
+    isRouteErrorResponse,
+    Links,
+    Meta,
+    Outlet,
+    Scripts,
+    ScrollRestoration,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 
-import { Header } from "./components/header/Header";
 import "./app.scss";
+import { Header } from "./components/header/Header";
 
 
 export function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -34,13 +35,13 @@ export function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
 export default function App() {
     return (
         <>
-        <Header />
-        <Outlet />
+            <Header />
+            <Outlet />
         </>
     );
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps): JSX.Element {
     let message = "Упс!";
     let details = "Получена неожиданная ошибка.";
     let stack;

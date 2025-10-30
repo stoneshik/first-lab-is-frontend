@@ -1,4 +1,5 @@
-import { HomeContent } from "../pages/Home/HomeContent";
+import type { JSX } from "react";
+import { HomeContent } from "~/pages/Home/HomeContent";
 
 export function meta() {
     return [
@@ -7,6 +8,6 @@ export function meta() {
     ];
 }
 
-export default function Home() {
+export default function Home(): JSX.Element {
     return <HomeContent />;
 }

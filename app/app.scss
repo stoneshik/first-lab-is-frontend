@@ -30,27 +30,6 @@ a {
     text-decoration: underline;
   }
 }
-.column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.header {
-  border-bottom: 1px solid #e6e6e6;
-  padding: 1.3rem 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.nav {
-  display: flex;
-  gap: 1rem;
-}
-.card {
-  border: 1px solid #e5e7eb;
-  padding: 1rem;
-  border-radius: 8px;
-}
 
 .error-page {
   padding: 1rem;
