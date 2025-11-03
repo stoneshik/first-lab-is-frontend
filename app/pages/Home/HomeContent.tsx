@@ -1,88 +1,130 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { api } from "~/lib/axios";
 
-import { isErrorMessage, type ErrorMessage } from "~/types/ErrorMessage";
+import { createMessageStringFromErrorMessage, isErrorMessage, type ErrorMessage } from "~/types/ErrorMessage";
 import type { WrapperListMusicBand } from "~/types/musicband/WrapperListMusicBand";
+import type { MusicGenre } from "~/types/MusicGenre";
 import "./homeContent.scss";
 
 interface ParamsForGetWrapperListMusicBand {
+    name: string;
+    genre: MusicGenre | null;
+    description: string;
+    bestAlbumName: string;
+    studioName: string;
+    studioAddress: string;
     page: number;
     size: number;
-    filter?: string;
+    sort: string;
 }
 
-const getWrapperListMusicBand = async (
-    { page, size, filter }: ParamsForGetWrapperListMusicBand
-): Promise<WrapperListMusicBand | ErrorMessage> => {
+const getWrapperListMusicBand = async ({
+    name,
+    genre,
+    description,
+    bestAlbumName,
+    studioName,
+    studioAddress,
+    page,
+    size,
+    sort,
+}: ParamsForGetWrapperListMusicBand): Promise<WrapperListMusicBand | ErrorMessage> => {
     try {
         const params: Record<string, string | number> = {
             page,
             size,
+            sort,
         };
-        if (filter) {
-            params.filter = filter;
-        }
+        if (name) { params.name = name; }
+        if (genre) { params.genre = genre; }
+        if (description) { params.description = description; }
+        if (bestAlbumName) { params.bestAlbumName = bestAlbumName; }
+        if (studioName) { params.studioName = studioName; }
+        if (studioAddress) { params.studioAddress = studioAddress; }
+
         const response = await api.get("/music-bands", { params });
         if (response.status !== 200) {
             return response.data as ErrorMessage;
         }
         return response.data as WrapperListMusicBand;
-    } catch (err) {
-        if (err && typeof err === "object" && "response" in err) {
+    } catch (error) {
+        if (error && typeof error === "object" && "response" in error) {
             // @ts-ignore
-            const status = err.response?.status;
+            const status = error.response?.status;
             // @ts-ignore
-            const data = err.response?.data;
+            const data = error.response?.data;
             throw new Error(`Серверная ошибка ${status}: ${JSON.stringify(data)}`);
         }
-        throw new Error(String(err));
+        throw new Error(String(error));
     }
 };
 
 export function HomeContent() {
     const [wrapperListMusicBand, setWrapperListMusicBand] = useState<WrapperListMusicBand | null>(null);
-    const [page, setPage] = useState<number>(0);
-    const [size, setSize] = useState<number>(5);
-    const [filter, setFilter] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [name, setName] = useState<string>("");
+    const [genre, setGenre] = useState<MusicGenre | null>(null);
+    const [description, setDescription] = useState<string>("");
+    const [bestAlbumName, setBestAlbumName] = useState<string>("");
+    const [studioName, setStudioName] = useState<string>("");
+    const [studioAddress, setStudioAddress] = useState<string>("");
+    const [page, setPage] = useState<number>(0);
+    const [size, setSize] = useState<number>(10);
+    const [sort, setSort] = useState<string>("name,asc");
 
-    const load = useCallback(async (p: number, s: number, f: string) => {
-        setLoading(true);
-        const data = await getWrapperListMusicBand({ page: p, size: s, filter: f });
-        if (isErrorMessage(data)) {
-            const violations = data.violations;
-            let message = data.message;
-            for (let i: number = 0; i < data.violations.length; i++) {
-                const violation = violations[i];
-                message += violation.nameField + " - " + violation.description
-                if (i < data.violations.length - 1) {
-                    message += ", "
-                }
+    const load = useCallback(
+        async (params: ParamsForGetWrapperListMusicBand) => {
+            setLoading(true);
+            const data = await getWrapperListMusicBand(params);
+            if (isErrorMessage(data)) {
+                const message = createMessageStringFromErrorMessage(data);
+                setErrorMessage(message);
+                setLoading(false);
+                return;
             }
-            setErrorMessage(message);
+            setWrapperListMusicBand(data);
             setLoading(false);
-            return;
-        }
-        setWrapperListMusicBand(data);
-        setLoading(false);
-        setErrorMessage("");
-    }, []);
+            setErrorMessage("");
+        }, []
+    );
 
-    useEffect(() => {
-        let mounted = true;
-        (async () => {
-            if (!mounted) return;
-            await load(page, size, filter);
-        })().catch(_ => setErrorMessage("Не получилось загрузить данные"));
-        return () => {
-            mounted = false;
-        };
-    }, [page, size, filter, load]);
+    useEffect(
+        () => {
+            let mounted = true;
+            (async () => {
+                if (!mounted) return;
+                await load({
+                    name,
+                    genre,
+                    description,
+                    bestAlbumName,
+                    studioName,
+                    studioAddress,
+                    page,
+                    size,
+                    sort,
+                });
+            })().catch(_ => setErrorMessage("Не получилось загрузить данные"));
+            return () => {
+                mounted = false;
+            };
+        }, [
+        name,
+        genre,
+        description,
+        bestAlbumName,
+        studioName,
+        studioAddress,
+        page,
+        size,
+        sort,
+        load,
+    ]);
 
-    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const v = event.target.value;
-        setFilter(v);
+        setName(v);
         setPage(0);
     };
 
@@ -90,7 +132,7 @@ export function HomeContent() {
         if (errorMessage) {
             return (
                 <div className="wrapper">
-                    <div>{errorMessage}</div>
+                    <div className="wrapper__error">{errorMessage}</div>
                 </div>
             );
         }
@@ -109,7 +151,7 @@ export function HomeContent() {
         );
     }
 
-    const bands = wrapperListMusicBand.musicBands;
+    const musicBands = wrapperListMusicBand.musicBands;
     const totalPages = wrapperListMusicBand.totalPages ?? 1;
     const totalElements = wrapperListMusicBand.totalElements ?? 0;
 
@@ -120,13 +162,14 @@ export function HomeContent() {
         <div className="wrapper">
             <h1>Музыкальные группы</h1>
             <h2>Всего найдено: {totalElements}</h2>
+            <div className="wrapper__error">{errorMessage}</div>
 
             <div className="wrapper__controls">
                 <input
                     type="text"
                     placeholder="Фильтр по имени..."
-                    value={filter}
-                    onChange={handleFilterChange}/>
+                    value={name}
+                    onChange={handleNameChange}/>
                 <select
                     value={size}
                     onChange={(e) => {
@@ -158,7 +201,7 @@ export function HomeContent() {
                 </tr>
                 </thead>
                 <tbody>
-                {bands.map((band) => (
+                {musicBands.map((band) => (
                     <tr key={band.id}>
                     <td>{band.id}</td>
                     <td>{band.name}</td>
@@ -187,7 +230,6 @@ export function HomeContent() {
                     Вперед
                 </button>
             </div>
-            <div>{errorMessage}</div>
         </div>
     );
 }

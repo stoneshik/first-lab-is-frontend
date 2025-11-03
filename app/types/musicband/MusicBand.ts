@@ -8,12 +8,12 @@ export interface MusicBand {
     name: string;
     coordinates: Coordinates;
     creationDate: string;
-    genre?: MusicGenre | null;
-    numberOfParticipants?: number | null;
+    genre: MusicGenre | null;
+    numberOfParticipants: number | null;
     singlesCount: number;
-    description?: string | null;
-    bestAlbum?: Album | null;
+    description: string | null;
+    bestAlbum: Album | null;
     albumsCount: number;
     establishmentDate: string;
-    studio?: Studio | null;
+    studio: Studio | null;
 }

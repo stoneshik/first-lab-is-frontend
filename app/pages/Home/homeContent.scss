@@ -1,3 +1,5 @@
+$error_color: #ce0000;
+
 .wrapper {
     padding: 1rem;
 
@@ -20,6 +22,10 @@
     select {
         padding: 0.5rem;
         border-radius: 4px;
+    }
+
+    &__error {
+        color: $error_color;
     }
 
     &__table {
