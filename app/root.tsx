@@ -10,8 +10,8 @@ import {
 
 import type { Route } from "./+types/root";
 
-import "./app.scss";
-import { Header } from "./components/header/Header";
+import "~/styles/globals.scss";
+import { Header } from "./components/Header/Header";
 
 
 export function Layout({ children }: Readonly<{ children: React.ReactNode }>) {

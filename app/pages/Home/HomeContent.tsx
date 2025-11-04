@@ -1,63 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { api } from "~/lib/axios";
 
-import { createMessageStringFromErrorMessage, isErrorMessage, type ErrorMessage } from "~/types/ErrorMessage";
-import type { WrapperListMusicBand } from "~/types/musicband/WrapperListMusicBand";
+import type { ParamsForGetWrapperListMusicBand } from "~/api/MusicBandsApi";
+import { getWrapperListMusicBand } from "~/api/MusicBandsApi";
+import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable";
+import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
+import type { WrapperListMusicBand } from "~/types/musicBand/WrapperListMusicBand";
 import type { MusicGenre } from "~/types/MusicGenre";
-import "./homeContent.scss";
-
-interface ParamsForGetWrapperListMusicBand {
-    name: string;
-    genre: MusicGenre | null;
-    description: string;
-    bestAlbumName: string;
-    studioName: string;
-    studioAddress: string;
-    page: number;
-    size: number;
-    sort: string;
-}
-
-const getWrapperListMusicBand = async ({
-    name,
-    genre,
-    description,
-    bestAlbumName,
-    studioName,
-    studioAddress,
-    page,
-    size,
-    sort,
-}: ParamsForGetWrapperListMusicBand): Promise<WrapperListMusicBand | ErrorMessage> => {
-    try {
-        const params: Record<string, string | number> = {
-            page,
-            size,
-            sort,
-        };
-        if (name) { params.name = name; }
-        if (genre) { params.genre = genre; }
-        if (description) { params.description = description; }
-        if (bestAlbumName) { params.bestAlbumName = bestAlbumName; }
-        if (studioName) { params.studioName = studioName; }
-        if (studioAddress) { params.studioAddress = studioAddress; }
-
-        const response = await api.get("/music-bands", { params });
-        if (response.status !== 200) {
-            return response.data as ErrorMessage;
-        }
-        return response.data as WrapperListMusicBand;
-    } catch (error) {
-        if (error && typeof error === "object" && "response" in error) {
-            // @ts-ignore
-            const status = error.response?.status;
-            // @ts-ignore
-            const data = error.response?.data;
-            throw new Error(`Серверная ошибка ${status}: ${JSON.stringify(data)}`);
-        }
-        throw new Error(String(error));
-    }
-};
+import styles from "./HomeContent.module.scss";
 
 export function HomeContent() {
     const [wrapperListMusicBand, setWrapperListMusicBand] = useState<WrapperListMusicBand | null>(null);
@@ -128,24 +77,9 @@ export function HomeContent() {
         setPage(0);
     };
 
-    if (loading) {
-        if (errorMessage) {
-            return (
-                <div className="wrapper">
-                    <div className="wrapper__error">{errorMessage}</div>
-                </div>
-            );
-        }
-        return (
-            <div className="wrapper">
-                <div>Загрузка...</div>
-            </div>
-        );
-    }
-
     if (!wrapperListMusicBand || (wrapperListMusicBand.totalElements ?? 0) === 0) {
         return (
-            <div className="wrapper">
+            <div className={styles.wrapper}>
                 <h1>Музыкальных групп нет</h1>
             </div>
         );
@@ -159,12 +93,12 @@ export function HomeContent() {
     const handleNextPage = () => setPage((p) => Math.min((totalPages - 1), p + 1));
 
     return (
-        <div className="wrapper">
+        <div className={styles.wrapper}>
             <h1>Музыкальные группы</h1>
             <h2>Всего найдено: {totalElements}</h2>
-            <div className="wrapper__error">{errorMessage}</div>
+            <div className={styles.error}>{errorMessage}</div>
 
-            <div className="wrapper__controls">
+            <div className={styles.controls}>
                 <input
                     type="text"
                     placeholder="Фильтр по имени..."
@@ -184,42 +118,9 @@ export function HomeContent() {
                 </select>
             </div>
 
-            <table className="wrapper__table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Название</th>
-                    <th>Жанр</th>
-                    <th>Участники</th>
-                    <th>Синглы</th>
-                    <th>Дата создания</th>
-                    <th>Дата основания</th>
-                    <th>Описание</th>
-                    <th>Координаты</th>
-                    <th>Студия</th>
-                    <th>Лучший альбом</th>
-                </tr>
-                </thead>
-                <tbody>
-                {musicBands.map((band) => (
-                    <tr key={band.id}>
-                    <td>{band.id}</td>
-                    <td>{band.name}</td>
-                    <td>{band.genre ?? "-"}</td>
-                    <td>{band.numberOfParticipants ?? "-"}</td>
-                    <td>{band.singlesCount ?? "-"}</td>
-                    <td>{new Date(band.creationDate).toLocaleString()}</td>
-                    <td>{new Date(band.establishmentDate).toLocaleDateString()}</td>
-                    <td>{band.description || "-"}</td>
-                    <td> x: {band.coordinates.x}, y: {band.coordinates.y} </td>
-                    <td>{band.studio ? `${band.studio.name} (${band.studio.address})` : "-"}</td>
-                    <td>{band.bestAlbum ? `${band.bestAlbum.name} (${band.bestAlbum.length} мин)` : "-"}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            <MusicBandTable musicBands={musicBands} />
 
-            <div className="wrapper__pagination">
+            <div className={styles.pagination}>
                 <button onClick={handlePrevPage} disabled={page <= 0}>
                     Назад
                 </button>

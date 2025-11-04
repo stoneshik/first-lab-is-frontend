@@ -9,5 +9,5 @@ export interface WrapperListMusicBand {
 }
 
 export const isWrapperListMusicBand = (obj: any): obj is WrapperListMusicBand => {
-  return obj && Array.isArray(obj.items);
+    return obj && Array.isArray(obj.items);
 }
