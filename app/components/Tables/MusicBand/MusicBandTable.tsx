@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import type { MusicBand } from "~/types/musicBand/MusicBand";
 import styles from "./MusicBandTable.module.scss";
 import { MusicGenreDictionary } from "~/types/MusicGenre";
+import { Link } from "react-router";
 
 interface MusicBandTableProps {
     musicBands: MusicBand[]
@@ -30,7 +31,11 @@ export const MusicBandTable = ({ musicBands } : MusicBandTableProps): JSX.Elemen
                 (band) => (
                     <tr key={band.id}>
                         <td>{band.id}</td>
-                        <td>{band.name}</td>
+                        <td>
+                            <Link to={`/music-bands/${band.id}`}>
+                                {band.name}
+                            </Link>
+                        </td>
                         <td>{(band.genre === null)? "-" : MusicGenreDictionary[band.genre]}</td>
                         <td>{band.numberOfParticipants ?? "-"}</td>
                         <td>{band.singlesCount ?? "-"}</td>

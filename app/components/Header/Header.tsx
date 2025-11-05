@@ -35,9 +35,6 @@ export function Header() {
                     <NavLink to="/" className={linkClass} onClick={closeMenu} end>
                         Главная
                     </NavLink>
-                    <NavLink to="/music-bands" className={linkClass} onClick={closeMenu}>
-                        Муз. группы
-                    </NavLink>
                     <NavLink to="/coordinates" className={linkClass} onClick={closeMenu}>
                         Координаты
                     </NavLink>
@@ -46,6 +43,9 @@ export function Header() {
                     </NavLink>
                     <NavLink to="/studios" className={linkClass} onClick={closeMenu}>
                         Студии
+                    </NavLink>
+                    <NavLink to="/nominations" className={linkClass} onClick={closeMenu}>
+                        Номинации
                     </NavLink>
                 </nav>
             </div>

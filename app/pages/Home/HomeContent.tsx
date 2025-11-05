@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import type { ParamsForGetWrapperListMusicBand } from "~/api/MusicBandsApi";
-import { getWrapperListMusicBand } from "~/api/MusicBandsApi";
+import type { ParamsForGetWrapperListMusicBand } from "~/api/MusicBands/GetAllMusicBands";
+import { getWrapperListMusicBand } from "~/api/MusicBands/GetAllMusicBands";
 import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable";
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
@@ -38,11 +38,12 @@ export function HomeContent() {
         }, []
     );
 
-    useEffect(
-        () => {
-            let mounted = true;
-            (async () => {
-                if (!mounted) return;
+    useEffect(() => {
+        let mounted = true;
+        let intervalId: NodeJS.Timeout;
+        const fetchData = async () => {
+            if (!mounted) return;
+            try {
                 await load({
                     name,
                     genre,
@@ -55,11 +56,17 @@ export function HomeContent() {
                     sortNameField,
                     sortOrder,
                 });
-            })().catch(_ => setErrorMessage("Не получилось загрузить данные"));
-            return () => {
-                mounted = false;
-            };
-        }, [
+            } catch {
+                setErrorMessage("Не получилось загрузить данные");
+            }
+        };
+        fetchData();
+        intervalId = setInterval(fetchData, 10_000);
+        return () => {
+            mounted = false;
+            clearInterval(intervalId);
+        };
+    }, [
         name,
         genre,
         description,
