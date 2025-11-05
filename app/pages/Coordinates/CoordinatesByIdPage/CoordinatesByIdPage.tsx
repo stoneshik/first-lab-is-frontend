@@ -1,26 +1,26 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import type { MusicBand } from "~/types/musicBand/MusicBand";
 
-import { getMusicBandById, type ParamsForGetMusicBandId } from "~/api/MusicBands/GetMusicBandById";
-import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable";
+import { getCoordinatesById, type ParamsForGetCoordinatesId } from "~/api/Coordinates/GetCoordinatesById";
+import { CoordinatesTable } from "~/components/Tables/Coordinates/CoordinatesTable";
+import type { Coordinates } from "~/types/coordinates/Coordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
-import styles from "./MusicBandContent.module.scss";
+import styles from "./CoordinatesByIdPage.module.scss";
 
-export function MusicBandContent() {
+export function CoordinatesByIdPage() {
     const { id } = useParams<{ id: string }>();
-    const [musicBand, setMusicBand] = useState<MusicBand | null>(null);
+    const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const load = useCallback(
-        async (params: ParamsForGetMusicBandId) => {
-            const data = await getMusicBandById(params);
+        async (params: ParamsForGetCoordinatesId) => {
+            const data = await getCoordinatesById(params);
             if (isErrorMessage(data)) {
                 const message = createMessageStringFromErrorMessage(data);
                 setErrorMessage(message);
                 return;
             }
-            setMusicBand(data);
+            setCoordinates(data);
             setErrorMessage("");
         }, []
     );
@@ -30,11 +30,9 @@ export function MusicBandContent() {
         let intervalId: NodeJS.Timeout;
         const fetchData = async () => {
             if (!mounted) return;
-            const musicBandId: number = (id === undefined)? 0 : +id;
+            const coordinatesId: number = (id === undefined)? 0 : +id;
             try {
-                await load({
-                    id: musicBandId
-                });
+                await load({ id: coordinatesId });
             } catch {
                 setErrorMessage("Не получилось загрузить данные");
             }
@@ -49,9 +47,9 @@ export function MusicBandContent() {
 
     return (
         <div className={styles.wrapper}>
-            <h1>Музыкальная группа</h1>
+            <h1>Координаты муз. групп</h1>
             <div className={styles.error}>{errorMessage}</div>
-            {musicBand && <MusicBandTable musicBands={[musicBand]} />}
+            {coordinates && <CoordinatesTable coordinates={[coordinates]} />}
         </div>
     );
 }

@@ -1,26 +1,26 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import type { MusicBand } from "~/types/musicBand/MusicBand";
 
-import { getMusicBandById, type ParamsForGetMusicBandId } from "~/api/MusicBands/GetMusicBandById";
-import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable";
+import { getStudioById, type ParamsForGetStudioId } from "~/api/Studios/GetStudioById";
+import { StudioTable } from "~/components/Tables/Studio/StudioTable";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
-import styles from "./MusicBandContent.module.scss";
+import type { Studio } from "~/types/studio/Studio";
+import styles from "./StudioByIdPage.module.scss";
 
-export function MusicBandContent() {
+export function StudioByIdPage() {
     const { id } = useParams<{ id: string }>();
-    const [musicBand, setMusicBand] = useState<MusicBand | null>(null);
+    const [studio, setStudio] = useState<Studio | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const load = useCallback(
-        async (params: ParamsForGetMusicBandId) => {
-            const data = await getMusicBandById(params);
+        async (params: ParamsForGetStudioId) => {
+            const data = await getStudioById(params);
             if (isErrorMessage(data)) {
                 const message = createMessageStringFromErrorMessage(data);
                 setErrorMessage(message);
                 return;
             }
-            setMusicBand(data);
+            setStudio(data);
             setErrorMessage("");
         }, []
     );
@@ -30,11 +30,9 @@ export function MusicBandContent() {
         let intervalId: NodeJS.Timeout;
         const fetchData = async () => {
             if (!mounted) return;
-            const musicBandId: number = (id === undefined)? 0 : +id;
+            const studioId: number = (id === undefined)? 0 : +id;
             try {
-                await load({
-                    id: musicBandId
-                });
+                await load({ id: studioId });
             } catch {
                 setErrorMessage("Не получилось загрузить данные");
             }
@@ -49,9 +47,9 @@ export function MusicBandContent() {
 
     return (
         <div className={styles.wrapper}>
-            <h1>Музыкальная группа</h1>
+            <h1>Студия</h1>
             <div className={styles.error}>{errorMessage}</div>
-            {musicBand && <MusicBandTable musicBands={[musicBand]} />}
+            {studio && <StudioTable studios={[studio]} />}
         </div>
     );
 }

@@ -1,26 +1,26 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import type { MusicBand } from "~/types/musicBand/MusicBand";
 
-import { getMusicBandById, type ParamsForGetMusicBandId } from "~/api/MusicBands/GetMusicBandById";
-import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable";
+import { getAlbumById, type ParamsForGetAlbumId } from "~/api/Albums/GetAlbumById";
+import { AlbumTable } from "~/components/Tables/Album/AlbumTable";
+import type { Album } from "~/types/album/Album";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
-import styles from "./MusicBandContent.module.scss";
+import styles from "./AlbumByIdPage.module.scss";
 
-export function MusicBandContent() {
+export function AlbumByIdPage() {
     const { id } = useParams<{ id: string }>();
-    const [musicBand, setMusicBand] = useState<MusicBand | null>(null);
+    const [album, setAlbum] = useState<Album | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const load = useCallback(
-        async (params: ParamsForGetMusicBandId) => {
-            const data = await getMusicBandById(params);
+        async (params: ParamsForGetAlbumId) => {
+            const data = await getAlbumById(params);
             if (isErrorMessage(data)) {
                 const message = createMessageStringFromErrorMessage(data);
                 setErrorMessage(message);
                 return;
             }
-            setMusicBand(data);
+            setAlbum(data);
             setErrorMessage("");
         }, []
     );
@@ -32,9 +32,7 @@ export function MusicBandContent() {
             if (!mounted) return;
             const musicBandId: number = (id === undefined)? 0 : +id;
             try {
-                await load({
-                    id: musicBandId
-                });
+                await load({ id: musicBandId });
             } catch {
                 setErrorMessage("Не получилось загрузить данные");
             }
@@ -49,9 +47,9 @@ export function MusicBandContent() {
 
     return (
         <div className={styles.wrapper}>
-            <h1>Музыкальная группа</h1>
+            <h1>Музыкальный альбом</h1>
             <div className={styles.error}>{errorMessage}</div>
-            {musicBand && <MusicBandTable musicBands={[musicBand]} />}
+            {album && <AlbumTable albums={[album]} />}
         </div>
     );
 }

@@ -1,0 +1,87 @@
+import { useCallback, useEffect, useState } from "react";
+
+import { getWrapperListAlbum, type ParamsForGetWrapperListAlbum } from "~/api/Albums/GetAllAlbums";
+import { AlbumTable } from "~/components/Tables/Album/AlbumTable";
+import { Button } from "~/components/UI/Button/Button";
+import type { WrapperListAlbum } from "~/types/album/WrapperListAlbum";
+import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
+import styles from "./AlbumsListPage.module.scss";
+
+export function AlbumsListPage() {
+    const [wrapperListAlbum, setWrapperListAlbum] = useState<WrapperListAlbum | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [page, setPage] = useState<number>(0);
+    const [size, setSize] = useState<number>(10);
+
+    const load = useCallback(
+        async (params: ParamsForGetWrapperListAlbum) => {
+            const data = await getWrapperListAlbum(params);
+            if (isErrorMessage(data)) {
+                const message = createMessageStringFromErrorMessage(data);
+                setErrorMessage(message);
+                return;
+            }
+            setWrapperListAlbum(data);
+            setErrorMessage("");
+        }, []
+    );
+
+    useEffect(() => {
+        let mounted = true;
+        let intervalId: NodeJS.Timeout;
+        const fetchData = async () => {
+            if (!mounted) return;
+            try {
+                await load({page, size});
+            } catch {
+                setErrorMessage("Не получилось загрузить данные");
+            }
+        };
+        fetchData();
+        intervalId = setInterval(fetchData, 10_000);
+        return () => {
+            mounted = false;
+            clearInterval(intervalId);
+        };
+    }, [page, size, load]);
+
+    const albums = wrapperListAlbum?.albums;
+    const totalPages = wrapperListAlbum?.totalPages ?? 1;
+    const totalElements = wrapperListAlbum?.totalElements ?? 0;
+
+    const handlePrevPage = (): void => setPage((p) => Math.max(0, p - 1));
+    const handleNextPage = (): void => setPage((p) => Math.min((totalPages - 1), p + 1));
+
+    return (
+        <div className={styles.wrapper}>
+            <h1>Музыкальные альбомы</h1>
+            <h2>Всего найдено: {totalElements}</h2>
+            <div className={styles.error}>{errorMessage}</div>
+            <div className={styles.controls}>
+                <select
+                    name="size"
+                    value={size}
+                    onChange={(e) => {
+                        setSize(Number(e.target.value));
+                        setPage(0);
+                    }}>
+                    {[5, 10, 20].map((s) => (
+                        <option key={s} value={s}>
+                            {s} на страницу
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {albums && <AlbumTable albums={albums} />}
+
+            <div className={styles.pagination}>
+                <Button onClick={handlePrevPage} textButton={"Назад"} disabled={page <= 0}/>
+                <span>
+                    Страница {page + 1} из {totalPages}
+                </span>
+                <Button onClick={handleNextPage} textButton={"Вперед"} disabled={page >= totalPages - 1}/>
+            </div>
+        </div>
+    );
+}

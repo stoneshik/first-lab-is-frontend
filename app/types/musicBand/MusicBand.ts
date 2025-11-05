@@ -1,7 +1,7 @@
-import type { Album } from "../Album";
-import type { Coordinates } from "../Coordinates";
+import type { Album } from "../album/Album";
+import type { Coordinates } from "../coordinates/Coordinates";
 import type { MusicGenre } from "../MusicGenre";
-import type { Studio } from "../Studio";
+import type { Studio } from "../studio/Studio";
 
 export interface MusicBand {
     id: number;

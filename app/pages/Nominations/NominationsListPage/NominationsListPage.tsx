@@ -1,0 +1,87 @@
+import { useCallback, useEffect, useState } from "react";
+
+import { getWrapperListNomination, type ParamsForGetWrapperListNomination } from "~/api/Nominations/GetAllNominations";
+import { NominationTable } from "~/components/Tables/Nomination/NominationTable";
+import { Button } from "~/components/UI/Button/Button";
+import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
+import type { WrapperListNomination } from "~/types/nomination/WrapperListNomination";
+import styles from "./NominationsListPage.module.scss";
+
+export function NominationsListPage() {
+    const [wrapperListNomination, setWrapperListNomination] = useState<WrapperListNomination | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [page, setPage] = useState<number>(0);
+    const [size, setSize] = useState<number>(10);
+
+    const load = useCallback(
+        async (params: ParamsForGetWrapperListNomination) => {
+            const data = await getWrapperListNomination(params);
+            if (isErrorMessage(data)) {
+                const message = createMessageStringFromErrorMessage(data);
+                setErrorMessage(message);
+                return;
+            }
+            setWrapperListNomination(data);
+            setErrorMessage("");
+        }, []
+    );
+
+    useEffect(() => {
+        let mounted = true;
+        let intervalId: NodeJS.Timeout;
+        const fetchData = async () => {
+            if (!mounted) return;
+            try {
+                await load({page, size});
+            } catch {
+                setErrorMessage("Не получилось загрузить данные");
+            }
+        };
+        fetchData();
+        intervalId = setInterval(fetchData, 10_000);
+        return () => {
+            mounted = false;
+            clearInterval(intervalId);
+        };
+    }, [page, size, load]);
+
+    const nominations = wrapperListNomination?.nominations;
+    const totalPages = wrapperListNomination?.totalPages ?? 1;
+    const totalElements = wrapperListNomination?.totalElements ?? 0;
+
+    const handlePrevPage = (): void => setPage((p) => Math.max(0, p - 1));
+    const handleNextPage = (): void => setPage((p) => Math.min((totalPages - 1), p + 1));
+
+    return (
+        <div className={styles.wrapper}>
+            <h1>Номинации муз. групп по жанрам</h1>
+            <h2>Всего найдено: {totalElements}</h2>
+            <div className={styles.error}>{errorMessage}</div>
+            <div className={styles.controls}>
+                <select
+                    name="size"
+                    value={size}
+                    onChange={(e) => {
+                        setSize(Number(e.target.value));
+                        setPage(0);
+                    }}>
+                    {[5, 10, 20].map((s) => (
+                        <option key={s} value={s}>
+                            {s} на страницу
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {nominations && <NominationTable nominations={nominations} />}
+
+            <div className={styles.pagination}>
+                <Button onClick={handlePrevPage} textButton={"Назад"} disabled={page <= 0}/>
+                <span>
+                    Страница {page + 1} из {totalPages}
+                </span>
+                <Button onClick={handleNextPage} textButton={"Вперед"} disabled={page >= totalPages - 1}/>
+            </div>
+        </div>
+    );
+}
