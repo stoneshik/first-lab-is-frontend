@@ -1,16 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { ParamsForGetWrapperListMusicBand } from "~/api/MusicBandsApi";
 import { getWrapperListMusicBand } from "~/api/MusicBandsApi";
 import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable";
+import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import type { WrapperListMusicBand } from "~/types/musicBand/WrapperListMusicBand";
-import type { MusicGenre } from "~/types/MusicGenre";
+import { MusicGenre, MusicGenreDictionary } from "~/types/MusicGenre";
+import { SortNameField, SortNameFieldDictionary } from "~/types/SortNameField";
+import { SortOrder, SortOrderDictionary } from "~/types/SortOrder";
 import styles from "./HomeContent.module.scss";
 
 export function HomeContent() {
     const [wrapperListMusicBand, setWrapperListMusicBand] = useState<WrapperListMusicBand | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [genre, setGenre] = useState<MusicGenre | null>(null);
@@ -20,20 +22,18 @@ export function HomeContent() {
     const [studioAddress, setStudioAddress] = useState<string>("");
     const [page, setPage] = useState<number>(0);
     const [size, setSize] = useState<number>(10);
-    const [sort, setSort] = useState<string>("name,asc");
+    const [sortNameField, setSortNameField] = useState<SortNameField>(SortNameField.NAME);
+    const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.ASC);
 
     const load = useCallback(
         async (params: ParamsForGetWrapperListMusicBand) => {
-            setLoading(true);
             const data = await getWrapperListMusicBand(params);
             if (isErrorMessage(data)) {
                 const message = createMessageStringFromErrorMessage(data);
                 setErrorMessage(message);
-                setLoading(false);
                 return;
             }
             setWrapperListMusicBand(data);
-            setLoading(false);
             setErrorMessage("");
         }, []
     );
@@ -52,7 +52,8 @@ export function HomeContent() {
                     studioAddress,
                     page,
                     size,
-                    sort,
+                    sortNameField,
+                    sortOrder,
                 });
             })().catch(_ => setErrorMessage("Не получилось загрузить данные"));
             return () => {
@@ -67,44 +68,96 @@ export function HomeContent() {
         studioAddress,
         page,
         size,
-        sort,
+        sortNameField,
+        sortOrder,
         load,
     ]);
 
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const v = event.target.value;
-        setName(v);
+    const musicBands = wrapperListMusicBand?.musicBands;
+    const totalPages = wrapperListMusicBand?.totalPages ?? 1;
+    const totalElements = wrapperListMusicBand?.totalElements ?? 0;
+
+    const handleGenreChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+        const rawValue = event.target.value;
+        if (rawValue === "-") {
+            setGenre(null);
+            setPage(0);
+            return;
+        }
+        setGenre(rawValue as MusicGenre);
         setPage(0);
     };
 
-    if (!wrapperListMusicBand || (wrapperListMusicBand.totalElements ?? 0) === 0) {
-        return (
-            <div className={styles.wrapper}>
-                <h1>Музыкальных групп нет</h1>
-            </div>
-        );
-    }
-
-    const musicBands = wrapperListMusicBand.musicBands;
-    const totalPages = wrapperListMusicBand.totalPages ?? 1;
-    const totalElements = wrapperListMusicBand.totalElements ?? 0;
-
-    const handlePrevPage = () => setPage((p) => Math.max(0, p - 1));
-    const handleNextPage = () => setPage((p) => Math.min((totalPages - 1), p + 1));
+    const handlePrevPage = (): void => setPage((p) => Math.max(0, p - 1));
+    const handleNextPage = (): void => setPage((p) => Math.min((totalPages - 1), p + 1));
 
     return (
         <div className={styles.wrapper}>
             <h1>Музыкальные группы</h1>
             <h2>Всего найдено: {totalElements}</h2>
             <div className={styles.error}>{errorMessage}</div>
-
             <div className={styles.controls}>
                 <input
                     type="text"
-                    placeholder="Фильтр по имени..."
+                    name="name_music_band"
+                    placeholder="Фильтр по названию группы..."
                     value={name}
-                    onChange={handleNameChange}/>
+                    style={{ width: 240 }}
+                    onChange={(e) => {
+                        setName(e.target.value);
+                        setPage(0);
+                    }}/>
                 <select
+                    name="music_genre"
+                    value={(genre === null)? "-" : genre as string}
+                    onChange={handleGenreChange}>
+                    {["-", ...Object.values(MusicGenre)].map((s) => (
+                        <option key={s} value={s}>
+                            { (s === "-")? "-" : MusicGenreDictionary[s] }
+                        </option>
+                    ))}
+                </select>
+                <input
+                    type="text"
+                    name="description"
+                    placeholder="Фильтр по описанию..."
+                    value={description}
+                    style={{ width: 180 }}
+                    onChange={(e) => {
+                        setDescription(e.target.value);
+                        setPage(0);
+                    }}/>
+                <input
+                    type="text"
+                    name="best_album_name"
+                    placeholder="Фильтр по названию лучшего альбома..."
+                    value={bestAlbumName}
+                    style={{ width: 325 }}
+                    onChange={(e) => {
+                        setBestAlbumName(e.target.value);
+                        setPage(0);
+                    }}/>
+                <input
+                    type="text"
+                    name="studio_name"
+                    placeholder="Фильтр по названию студии..."
+                    value={studioName}
+                    style={{ width: 240 }}
+                    onChange={(e) => {
+                        setStudioName(e.target.value);
+                        setPage(0);
+                    }}/>
+                <input
+                    type="text"
+                    name="studio_address"
+                    placeholder="Фильтр по адресу студии..."
+                    value={studioAddress}
+                    onChange={(e) => {
+                        setStudioAddress(e.target.value);
+                        setPage(0);
+                    }}/>
+                <select
+                    name="size"
                     value={size}
                     onChange={(e) => {
                         setSize(Number(e.target.value));
@@ -116,20 +169,42 @@ export function HomeContent() {
                         </option>
                     ))}
                 </select>
+                <select
+                    name="sort_name_field"
+                    value={sortNameField as string}
+                    onChange={(e) => {
+                        setSortNameField(e.target.value as SortNameField);
+                        setPage(0);
+                    }}>
+                    {["-", ...Object.values(SortNameField)].map((s) => (
+                        <option key={s} value={s}>
+                            { (s === "-")? "-" : SortNameFieldDictionary[s] }
+                        </option>
+                    ))}
+                </select>
+                <select
+                    name="sort_order"
+                    value={sortOrder as string}
+                    onChange={(e) => {
+                        setSortOrder(e.target.value as SortOrder);
+                        setPage(0);
+                    }}>
+                    {Object.values(SortOrder).map((s) => (
+                        <option key={s} value={s}>
+                            { SortOrderDictionary[s] }
+                        </option>
+                    ))}
+                </select>
             </div>
 
-            <MusicBandTable musicBands={musicBands} />
+            {musicBands && <MusicBandTable musicBands={musicBands} />}
 
             <div className={styles.pagination}>
-                <button onClick={handlePrevPage} disabled={page <= 0}>
-                    Назад
-                </button>
+                <Button onClick={handlePrevPage} textButton={"Назад"} disabled={page <= 0}/>
                 <span>
                     Страница {page + 1} из {totalPages}
                 </span>
-                <button onClick={handleNextPage} disabled={page >= totalPages - 1}>
-                    Вперед
-                </button>
+                <Button onClick={handleNextPage} textButton={"Вперед"} disabled={page >= totalPages - 1}/>
             </div>
         </div>
     );

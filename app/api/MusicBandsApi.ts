@@ -3,6 +3,8 @@ import { api } from "~/lib/axios";
 import { type ErrorMessage } from "~/types/ErrorMessage";
 import type { WrapperListMusicBand } from "~/types/musicBand/WrapperListMusicBand";
 import type { MusicGenre } from "~/types/MusicGenre";
+import type { SortNameField } from "~/types/SortNameField";
+import type { SortOrder } from "~/types/SortOrder";
 
 export interface ParamsForGetWrapperListMusicBand {
     name: string;
@@ -13,7 +15,8 @@ export interface ParamsForGetWrapperListMusicBand {
     studioAddress: string;
     page: number;
     size: number;
-    sort: string;
+    sortNameField: SortNameField | null;
+    sortOrder: SortOrder;
 }
 
 export const getWrapperListMusicBand = async ({
@@ -25,20 +28,24 @@ export const getWrapperListMusicBand = async ({
     studioAddress,
     page,
     size,
-    sort,
+    sortNameField,
+    sortOrder
 }: ParamsForGetWrapperListMusicBand): Promise<WrapperListMusicBand | ErrorMessage> => {
     try {
         const params: Record<string, string | number> = {
             page,
             size,
-            sort,
         };
         if (name !== "") { params.name = name; }
-        if (genre) { params.genre = genre; }
+        if (genre !== null) { params.genre = genre; }
         if (description !== "") { params.description = description; }
         if (bestAlbumName !== "") { params.bestAlbumName = bestAlbumName; }
         if (studioName !== "") { params.studioName = studioName; }
         if (studioAddress !== "") { params.studioAddress = studioAddress; }
+        if (sortNameField !== null) {
+            const sortParam = sortNameField + "," + sortOrder;
+            params.sort = sortParam;
+        }
 
         const response = await api.get("/music-bands", { params });
         if (response.status !== 200) {

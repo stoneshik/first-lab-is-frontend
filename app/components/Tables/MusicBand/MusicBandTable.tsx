@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import type { MusicBand } from "~/types/musicBand/MusicBand";
 import styles from "./MusicBandTable.module.scss";
+import { MusicGenreDictionary } from "~/types/MusicGenre";
 
 interface MusicBandTableProps {
     musicBands: MusicBand[]
@@ -16,7 +17,7 @@ export const MusicBandTable = ({ musicBands } : MusicBandTableProps): JSX.Elemen
                     <th>Жанр</th>
                     <th>Участники</th>
                     <th>Синглы</th>
-                    <th>Дата создания</th>
+                    <th>Время создания</th>
                     <th>Дата основания</th>
                     <th>Описание</th>
                     <th>Координаты</th>
@@ -30,15 +31,15 @@ export const MusicBandTable = ({ musicBands } : MusicBandTableProps): JSX.Elemen
                     <tr key={band.id}>
                         <td>{band.id}</td>
                         <td>{band.name}</td>
-                        <td>{band.genre ?? "-"}</td>
+                        <td>{(band.genre === null)? "-" : MusicGenreDictionary[band.genre]}</td>
                         <td>{band.numberOfParticipants ?? "-"}</td>
                         <td>{band.singlesCount ?? "-"}</td>
-                        <td>{new Date(band.creationDate).toLocaleString()}</td>
-                        <td>{new Date(band.establishmentDate).toLocaleDateString()}</td>
+                        <td>{new Date(band.creationDate).toLocaleString("ru-RU")}</td>
+                        <td>{new Date(band.establishmentDate).toLocaleDateString("ru-RU")}</td>
                         <td>{band.description || "-"}</td>
                         <td> x: {band.coordinates.x}, y: {band.coordinates.y} </td>
                         <td>{band.studio ? `${band.studio.name} (${band.studio.address})` : "-"}</td>
-                        <td>{band.bestAlbum ? `${band.bestAlbum.name} (${band.bestAlbum.length} мин)` : "-"}</td>
+                        <td>{band.bestAlbum ? `${band.bestAlbum.name} (${band.bestAlbum.length} сек)` : "-"}</td>
                     </tr>
                 )
             )}
