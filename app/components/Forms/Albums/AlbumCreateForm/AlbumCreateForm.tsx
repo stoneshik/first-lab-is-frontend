@@ -7,7 +7,7 @@ import styles from "./AlbumCreateForm.module.scss";
 
 export function AlbumCreateForm() {
     const [name, setName] = useState<string>("");
-    const [length, setLength] = useState<number>(0);
+    const [length, setLength] = useState<number>(1);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [successMessage, setSuccessMessage] = useState<string>("");

@@ -59,7 +59,7 @@ export function NominationCreateForm() {
     return (
         <div className={styles.formWrapper}>
             <form className={styles.form} onSubmit={(e) => e?.preventDefault()}>
-                <h2 className={styles.title}>Номинация музыкальной группы</h2>
+                <h2>Номинация музыкальной группы</h2>
                 <select
                     name="music_genre"
                     value={musicGenre as string}
