@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import { getAlbumById, type ParamsForGetAlbumId } from "~/api/Albums/GetAlbumById";
+import { AlbumEditForm } from "~/components/Forms/Albums/AlbumEditForm/AlbumEditForm";
 import { AlbumTable } from "~/components/Tables/Album/AlbumTable";
 import type { Album } from "~/types/album/Album";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
@@ -14,20 +15,22 @@ export function AlbumByIdPage() {
 
     const load = useCallback(
         async (params: ParamsForGetAlbumId) => {
-            const data = await getAlbumById(params);
-            if (isErrorMessage(data)) {
-                const message = createMessageStringFromErrorMessage(data);
-                setErrorMessage(message);
-                return;
+            try {
+                const data = await getAlbumById(params);
+                setAlbum(data);
+                setErrorMessage("");
+            } catch (error) {
+                if (isErrorMessage(error)) {
+                    const message = createMessageStringFromErrorMessage(error);
+                    setErrorMessage(message);
+                    return;
+                }
             }
-            setAlbum(data);
-            setErrorMessage("");
         }, []
     );
 
     useEffect(() => {
         let mounted = true;
-        let intervalId: NodeJS.Timeout;
         const fetchData = async () => {
             if (!mounted) return;
             const musicBandId: number = (id === undefined)? 0 : +id;
@@ -38,11 +41,7 @@ export function AlbumByIdPage() {
             }
         };
         fetchData();
-        intervalId = setInterval(fetchData, 10_000);
-        return () => {
-            mounted = false;
-            clearInterval(intervalId);
-        };
+        return () => { mounted = false; };
     }, [id, load]);
 
     return (
@@ -50,6 +49,7 @@ export function AlbumByIdPage() {
             <h1>Музыкальный альбом</h1>
             <div className={styles.error}>{errorMessage}</div>
             {album && <AlbumTable albums={[album]} />}
+            {album && <AlbumEditForm album={album} />}
         </div>
     );
 }

@@ -1,7 +1,6 @@
 import { api } from "~/lib/axios";
 import type { Album } from "~/types/album/Album";
-
-import { type ErrorMessage } from "~/types/ErrorMessage";
+import { isErrorMessage } from "~/types/ErrorMessage";
 
 export interface ParamsForGetAlbumId {
     id: number;
@@ -9,12 +8,9 @@ export interface ParamsForGetAlbumId {
 
 export const getAlbumById = async (
     { id }: ParamsForGetAlbumId
-): Promise<Album | ErrorMessage> => {
+): Promise<Album> => {
     try {
         const response = await api.get(`/albums/${id}`);
-        if (response.status !== 200) {
-            return response.data as ErrorMessage;
-        }
         return response.data as Album;
     } catch (error) {
         if (error && typeof error === "object" && "response" in error) {
@@ -22,6 +18,7 @@ export const getAlbumById = async (
             const status = error.response?.status;
             // @ts-ignore
             const data = error.response?.data;
+            if (isErrorMessage(data)) { throw data; }
             throw new Error(`Серверная ошибка ${status}: ${JSON.stringify(data)}`);
         }
         throw new Error(String(error));

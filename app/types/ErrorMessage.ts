@@ -1,27 +1,24 @@
-export interface Violation {
-    nameField: string;
-    description: string;
-}
-
 export interface ErrorMessage {
     timestamp: string;
     message: string;
-    violations: Violation[];
+    violations: Record<string, string>;
 }
 
 export const isErrorMessage = (obj: any): obj is ErrorMessage => {
-      return obj && Array.isArray(obj.items);
-}
+    return (
+        obj &&
+        typeof obj.timestamp === "string" &&
+        typeof obj.message === "string" &&
+        obj.violations &&
+        typeof obj.violations === "object"
+    );
+};
 
 export const createMessageStringFromErrorMessage = (errorMessage: ErrorMessage): string => {
     const violations = errorMessage.violations;
-    let message = errorMessage.message;
-    for (let i: number = 0; i < errorMessage.violations.length; i++) {
-        const violation = violations[i];
-        message += violation.nameField + " - " + violation.description
-        if (i < errorMessage.violations.length - 1) {
-            message += ", "
-        }
-    }
+    const stringWithFields = Object.entries(violations)
+            .map(([nameField, description]) => `${nameField} - ${description}`)
+            .join(", ");
+    const message = `${errorMessage.message}: ${stringWithFields}`;
     return message;
 }

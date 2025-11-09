@@ -14,14 +14,17 @@ export function NominationByIdPage() {
 
     const load = useCallback(
         async (params: ParamsForGetNominationId) => {
-            const data = await getNominationById(params);
-            if (isErrorMessage(data)) {
-                const message = createMessageStringFromErrorMessage(data);
-                setErrorMessage(message);
-                return;
+            try {
+                const data = await getNominationById(params);
+                setNomination(data);
+                setErrorMessage("");
+            } catch (error) {
+                if (isErrorMessage(error)) {
+                    const message = createMessageStringFromErrorMessage(error);
+                    setErrorMessage(message);
+                    return;
+                }
             }
-            setNomination(data);
-            setErrorMessage("");
         }, []
     );
 

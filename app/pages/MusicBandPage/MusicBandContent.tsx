@@ -14,14 +14,17 @@ export function MusicBandContent() {
 
     const load = useCallback(
         async (params: ParamsForGetMusicBandId) => {
-            const data = await getMusicBandById(params);
-            if (isErrorMessage(data)) {
-                const message = createMessageStringFromErrorMessage(data);
-                setErrorMessage(message);
-                return;
+            try {
+                const data = await getMusicBandById(params);
+                setMusicBand(data);
+                setErrorMessage("");
+            } catch (error) {
+                if (isErrorMessage(error)) {
+                    const message = createMessageStringFromErrorMessage(error);
+                    setErrorMessage(message);
+                    return;
+                }
             }
-            setMusicBand(data);
-            setErrorMessage("");
         }, []
     );
 

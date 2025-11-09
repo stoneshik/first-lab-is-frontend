@@ -15,14 +15,17 @@ export function StudiosListPage() {
 
     const load = useCallback(
         async (params: ParamsForGetWrapperListStudio) => {
-            const data = await getWrapperListStudio(params);
-            if (isErrorMessage(data)) {
-                const message = createMessageStringFromErrorMessage(data);
-                setErrorMessage(message);
-                return;
+            try {
+                const data = await getWrapperListStudio(params);
+                setWrapperListStudio(data);
+                setErrorMessage("");
+            } catch (error) {
+                if (isErrorMessage(error)) {
+                    const message = createMessageStringFromErrorMessage(error);
+                    setErrorMessage(message);
+                    return;
+                }
             }
-            setWrapperListStudio(data);
-            setErrorMessage("");
         }, []
     );
 

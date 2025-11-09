@@ -15,14 +15,17 @@ export function AlbumsListPage() {
 
     const load = useCallback(
         async (params: ParamsForGetWrapperListAlbum) => {
-            const data = await getWrapperListAlbum(params);
-            if (isErrorMessage(data)) {
-                const message = createMessageStringFromErrorMessage(data);
-                setErrorMessage(message);
-                return;
+            try {
+                const data = await getWrapperListAlbum(params);
+                setWrapperListAlbum(data);
+                setErrorMessage("");
+            } catch (error) {
+                if (isErrorMessage(error)) {
+                    const message = createMessageStringFromErrorMessage(error);
+                    setErrorMessage(message);
+                    return;
+                }
             }
-            setWrapperListAlbum(data);
-            setErrorMessage("");
         }, []
     );
 

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import { getCoordinatesById, type ParamsForGetCoordinatesId } from "~/api/Coordinates/GetCoordinatesById";
+import { CoordinatesEditForm } from "~/components/Forms/Coordinates/CoordinatesEditForm/CoordinatesEditForm";
 import { CoordinatesTable } from "~/components/Tables/Coordinates/CoordinatesTable";
 import type { Coordinates } from "~/types/coordinates/Coordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
@@ -14,14 +15,17 @@ export function CoordinatesByIdPage() {
 
     const load = useCallback(
         async (params: ParamsForGetCoordinatesId) => {
-            const data = await getCoordinatesById(params);
-            if (isErrorMessage(data)) {
-                const message = createMessageStringFromErrorMessage(data);
-                setErrorMessage(message);
-                return;
+            try {
+                const data = await getCoordinatesById(params);
+                setCoordinates(data);
+                setErrorMessage("");
+            } catch (error) {
+                if (isErrorMessage(error)) {
+                    const message = createMessageStringFromErrorMessage(error);
+                    setErrorMessage(message);
+                    return;
+                }
             }
-            setCoordinates(data);
-            setErrorMessage("");
         }, []
     );
 
@@ -50,6 +54,7 @@ export function CoordinatesByIdPage() {
             <h1>Координаты муз. групп</h1>
             <div className={styles.error}>{errorMessage}</div>
             {coordinates && <CoordinatesTable coordinates={[coordinates]} />}
+            {coordinates && <CoordinatesEditForm coordinates={coordinates} />}
         </div>
     );
 }

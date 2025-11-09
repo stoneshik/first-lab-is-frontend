@@ -15,14 +15,17 @@ export function NominationsListPage() {
 
     const load = useCallback(
         async (params: ParamsForGetWrapperListNomination) => {
-            const data = await getWrapperListNomination(params);
-            if (isErrorMessage(data)) {
-                const message = createMessageStringFromErrorMessage(data);
-                setErrorMessage(message);
-                return;
+            try {
+                const data = await getWrapperListNomination(params);
+                setWrapperListNomination(data);
+                setErrorMessage("");
+            } catch (error) {
+                if (isErrorMessage(error)) {
+                    const message = createMessageStringFromErrorMessage(error);
+                    setErrorMessage(message);
+                    return;
+                }
             }
-            setWrapperListNomination(data);
-            setErrorMessage("");
         }, []
     );
 

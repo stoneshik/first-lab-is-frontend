@@ -15,14 +15,17 @@ export function CoordinatesListPage() {
 
     const load = useCallback(
         async (params: ParamsForGetWrapperListCoordinates) => {
-            const data = await getWrapperListCoordinates(params);
-            if (isErrorMessage(data)) {
-                const message = createMessageStringFromErrorMessage(data);
-                setErrorMessage(message);
-                return;
+            try {
+                const data = await getWrapperListCoordinates(params);
+                setWrapperListCoordinates(data);
+                setErrorMessage("");
+            } catch (error) {
+                if (isErrorMessage(error)) {
+                    const message = createMessageStringFromErrorMessage(error);
+                    setErrorMessage(message);
+                    return;
+                }
             }
-            setWrapperListCoordinates(data);
-            setErrorMessage("");
         }, []
     );
 

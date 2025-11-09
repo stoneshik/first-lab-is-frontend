@@ -27,14 +27,17 @@ export function HomeContent() {
 
     const load = useCallback(
         async (params: ParamsForGetWrapperListMusicBand) => {
-            const data = await getWrapperListMusicBand(params);
-            if (isErrorMessage(data)) {
-                const message = createMessageStringFromErrorMessage(data);
-                setErrorMessage(message);
-                return;
+            try {
+                const data = await getWrapperListMusicBand(params);
+                setWrapperListMusicBand(data);
+                setErrorMessage("");
+            } catch (error) {
+                if (isErrorMessage(error)) {
+                    const message = createMessageStringFromErrorMessage(error);
+                    setErrorMessage(message);
+                    return;
+                }
             }
-            setWrapperListMusicBand(data);
-            setErrorMessage("");
         }, []
     );
 

@@ -1,17 +1,27 @@
 import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
+import { MusicGenre } from "~/types/MusicGenre";
 import type { Nomination } from "~/types/nomination/Nomination";
 
-export interface ParamsForGetNominationId {
+export type ParamsForUpdateNomination = {
     id: number;
-}
+    musicBandId: number;
+    musicBandName: string;
+    musicGenre: MusicGenre;
+    nominatedAt: string;
+};
 
-export const getNominationById = async (
-    { id }: ParamsForGetNominationId
+export const updateNomination = async (
+    params: ParamsForUpdateNomination
 ): Promise<Nomination> => {
     try {
-        const response = await api.get(`/nominations/${id}`);
-        return response.data as Nomination;
+        const response = await api.put<Nomination>(`/nominations/${params.id}`, {
+            musicBandId: params.musicBandId,
+            musicBandName: params.musicBandName,
+            musicGenre: params.musicGenre,
+            nominatedAt: params.nominatedAt,
+        });
+        return response.data;
     } catch (error) {
         if (error && typeof error === "object" && "response" in error) {
             // @ts-ignore
@@ -23,4 +33,4 @@ export const getNominationById = async (
         }
         throw new Error(String(error));
     }
-};
+}

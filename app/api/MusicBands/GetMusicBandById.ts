@@ -1,6 +1,5 @@
 import { api } from "~/lib/axios";
-
-import { type ErrorMessage } from "~/types/ErrorMessage";
+import { isErrorMessage } from "~/types/ErrorMessage";
 import type { MusicBand } from "~/types/musicBand/MusicBand";
 
 export interface ParamsForGetMusicBandId {
@@ -9,12 +8,9 @@ export interface ParamsForGetMusicBandId {
 
 export const getMusicBandById = async (
     { id }: ParamsForGetMusicBandId
-): Promise<MusicBand | ErrorMessage> => {
+): Promise<MusicBand> => {
     try {
         const response = await api.get(`/music-bands/${id}`);
-        if (response.status !== 200) {
-            return response.data as ErrorMessage;
-        }
         return response.data as MusicBand;
     } catch (error) {
         if (error && typeof error === "object" && "response" in error) {
@@ -22,6 +18,7 @@ export const getMusicBandById = async (
             const status = error.response?.status;
             // @ts-ignore
             const data = error.response?.data;
+            if (isErrorMessage(data)) { throw data; }
             throw new Error(`Серверная ошибка ${status}: ${JSON.stringify(data)}`);
         }
         throw new Error(String(error));

@@ -1,7 +1,7 @@
 import styles from "./Button.module.scss";
 
 interface ButtonProps {
-    onClick: () => void;
+    onClick?: () => void;
     textButton: string;
     disabled?: boolean;
 }

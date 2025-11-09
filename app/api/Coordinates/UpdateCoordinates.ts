@@ -1,18 +1,22 @@
 import { api } from "~/lib/axios";
-import type { WrapperListAlbum } from "~/types/album/WrapperListAlbum";
+import type { Coordinates } from "~/types/coordinates/Coordinates";
 import { isErrorMessage } from "~/types/ErrorMessage";
 
-export interface ParamsForGetWrapperListAlbum {
-    page: number;
-    size: number;
-}
+export type ParamsForUpdateCoordinates = {
+    id: number;
+    x: number;
+    y: number;
+};
 
-export const getWrapperListAlbum = async (
-    params: ParamsForGetWrapperListAlbum
-): Promise<WrapperListAlbum> => {
+export const updateCoordinates = async (
+    params: ParamsForUpdateCoordinates
+): Promise<Coordinates> => {
     try {
-        const response = await api.get("/albums", { params });
-        return response.data as WrapperListAlbum;
+        const response = await api.put<Coordinates>(`/coordinates/${params.id}`, {
+            x: params.x,
+            y: params.y,
+        });
+        return response.data;
     } catch (error) {
         if (error && typeof error === "object" && "response" in error) {
             // @ts-ignore
@@ -24,4 +28,4 @@ export const getWrapperListAlbum = async (
         }
         throw new Error(String(error));
     }
-};
+}

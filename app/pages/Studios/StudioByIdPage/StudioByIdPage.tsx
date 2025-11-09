@@ -6,6 +6,7 @@ import { StudioTable } from "~/components/Tables/Studio/StudioTable";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import type { Studio } from "~/types/studio/Studio";
 import styles from "./StudioByIdPage.module.scss";
+import { StudioEditForm } from "~/components/Forms/Studios/StudioEditForm/StudioEditForm";
 
 export function StudioByIdPage() {
     const { id } = useParams<{ id: string }>();
@@ -14,14 +15,17 @@ export function StudioByIdPage() {
 
     const load = useCallback(
         async (params: ParamsForGetStudioId) => {
-            const data = await getStudioById(params);
-            if (isErrorMessage(data)) {
-                const message = createMessageStringFromErrorMessage(data);
-                setErrorMessage(message);
-                return;
+            try {
+                const data = await getStudioById(params);
+                setStudio(data);
+                setErrorMessage("");
+            } catch (error) {
+                if (isErrorMessage(error)) {
+                    const message = createMessageStringFromErrorMessage(error);
+                    setErrorMessage(message);
+                    return;
+                }
             }
-            setStudio(data);
-            setErrorMessage("");
         }, []
     );
 
@@ -50,6 +54,7 @@ export function StudioByIdPage() {
             <h1>Студия</h1>
             <div className={styles.error}>{errorMessage}</div>
             {studio && <StudioTable studios={[studio]} />}
+            {studio && <StudioEditForm studio={studio} />}
         </div>
     );
 }
