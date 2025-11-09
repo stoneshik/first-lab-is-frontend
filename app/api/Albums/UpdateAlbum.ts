@@ -1,15 +1,13 @@
 import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
 
-export type ParamsForUpdateAlbum = {
+export interface ParamsForUpdateAlbum {
     id: number;
     name: string;
     length: number;
-};
+}
 
-export const updateAlbum = async (
-    params: ParamsForUpdateAlbum
-): Promise<void> => {
+export const updateAlbum = async (params: ParamsForUpdateAlbum): Promise<void> => {
     try {
         await api.put(`/albums/${params.id}`, {
             name: params.name,
@@ -26,4 +24,4 @@ export const updateAlbum = async (
         }
         throw new Error(String(error));
     }
-}
+};

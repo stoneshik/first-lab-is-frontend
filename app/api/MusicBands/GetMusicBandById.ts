@@ -2,13 +2,9 @@ import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
 import type { MusicBand } from "~/types/musicBand/MusicBand";
 
-export interface ParamsForGetMusicBandId {
-    id: number;
-}
+export interface ParamsForGetMusicBandId { id: number; }
 
-export const getMusicBandById = async (
-    { id }: ParamsForGetMusicBandId
-): Promise<MusicBand> => {
+export const getMusicBandById = async ({ id }: ParamsForGetMusicBandId): Promise<MusicBand> => {
     try {
         const response = await api.get(`/music-bands/${id}`);
         return response.data as MusicBand;

@@ -2,13 +2,9 @@ import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
 import type { Studio } from "~/types/studio/Studio";
 
-export interface ParamsForGetStudioId {
-    id: number;
-}
+export interface ParamsForGetStudioId { id: number; }
 
-export const getStudioById = async (
-    { id }: ParamsForGetStudioId
-): Promise<Studio> => {
+export const getStudioById = async ({ id }: ParamsForGetStudioId): Promise<Studio> => {
     try {
         const response = await api.get(`/studios/${id}`);
         return response.data as Studio;

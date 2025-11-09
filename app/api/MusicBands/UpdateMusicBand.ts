@@ -23,9 +23,7 @@ export interface ParamsForUpdateMusicBand {
     studioId: number | null;
 }
 
-export const updateMusicBand = async (
-    params: ParamsForUpdateMusicBand
-): Promise<void> => {
+export const updateMusicBand = async (params: ParamsForUpdateMusicBand): Promise<void> => {
     try {
         await api.put(`/music-bands/${params.id}`, {
             name: params.name,

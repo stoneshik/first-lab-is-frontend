@@ -1,15 +1,13 @@
 import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
 
-export type ParamsForUpdateCoordinates = {
+export interface ParamsForUpdateCoordinates {
     id: number;
     x: number;
     y: number;
-};
+}
 
-export const updateCoordinates = async (
-    params: ParamsForUpdateCoordinates
-): Promise<void> => {
+export const updateCoordinates = async (params: ParamsForUpdateCoordinates): Promise<void> => {
     try {
         await api.put(`/coordinates/${params.id}`, {
             x: params.x,
@@ -26,4 +24,4 @@ export const updateCoordinates = async (
         }
         throw new Error(String(error));
     }
-}
+};

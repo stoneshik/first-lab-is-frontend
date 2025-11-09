@@ -22,9 +22,7 @@ export interface ParamsForCreateMusicBand {
     studioId: number | null;
 }
 
-export const createMusicBand = async (
-    params: ParamsForCreateMusicBand
-): Promise<void> => {
+export const createMusicBand = async (params: ParamsForCreateMusicBand): Promise<void> => {
     try {
         await api.post("/music-bands", { params });
     } catch (error) {

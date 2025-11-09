@@ -2,14 +2,12 @@ import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
 import type { MusicGenre } from "~/types/MusicGenre";
 
-export type ParamsForCreateNomination = {
+export interface ParamsForCreateNomination {
     musicBandId: number;
     musicGenre: MusicGenre;
-};
+}
 
-export const createNomination = async (
-    params: ParamsForCreateNomination
-): Promise<void> => {
+export const createNomination = async (params: ParamsForCreateNomination): Promise<void> => {
     try {
         await api.post("/nominations", {
             musicBandId: params.musicBandId,
@@ -26,4 +24,4 @@ export const createNomination = async (
         }
         throw new Error(String(error));
     }
-}
+};

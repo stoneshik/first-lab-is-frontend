@@ -1,14 +1,12 @@
 import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
 
-export type ParamsForCreateStudio = {
+export interface ParamsForCreateStudio {
     name: string;
     address: string;
-};
+}
 
-export const createStudio = async (
-    params: ParamsForCreateStudio
-): Promise<void> => {
+export const createStudio = async (params: ParamsForCreateStudio): Promise<void> => {
     try {
         await api.post("/studios", {
             name: params.name,
@@ -25,4 +23,4 @@ export const createStudio = async (
         }
         throw new Error(String(error));
     }
-}
+};

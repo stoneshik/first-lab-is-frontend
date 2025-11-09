@@ -1,17 +1,11 @@
 import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
 
-export interface ParamsForCreateCoordinates {
-    x: number;
-    y: number;
-}
+export interface ParamsForDeleteNomination { id: number; }
 
-export const createCoordinates = async (params: ParamsForCreateCoordinates): Promise<void> => {
+export const deleteNomination = async ({ id }: ParamsForDeleteNomination): Promise<void> => {
     try {
-        await api.post("/coordinates", {
-            x: params.x,
-            y: params.y,
-        });
+        await api.delete(`/nominations/${id}`);
     } catch (error) {
         if (error && typeof error === "object" && "response" in error) {
             // @ts-ignore

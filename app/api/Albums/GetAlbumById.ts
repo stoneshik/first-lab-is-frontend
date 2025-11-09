@@ -2,13 +2,9 @@ import { api } from "~/lib/axios";
 import type { Album } from "~/types/album/Album";
 import { isErrorMessage } from "~/types/ErrorMessage";
 
-export interface ParamsForGetAlbumId {
-    id: number;
-}
+export interface ParamsForGetAlbumId { id: number; }
 
-export const getAlbumById = async (
-    { id }: ParamsForGetAlbumId
-): Promise<Album> => {
+export const getAlbumById = async ({ id }: ParamsForGetAlbumId): Promise<Album> => {
     try {
         const response = await api.get(`/albums/${id}`);
         return response.data as Album;

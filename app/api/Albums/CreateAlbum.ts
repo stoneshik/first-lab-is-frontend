@@ -1,14 +1,12 @@
 import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
 
-export type ParamsForCreateAlbum = {
+export interface ParamsForCreateAlbum {
     name: string;
     length: number;
-};
+}
 
-export const createAlbum = async (
-    params: ParamsForCreateAlbum
-): Promise<void> => {
+export const createAlbum = async (params: ParamsForCreateAlbum): Promise<void> => {
     try {
         await api.post("/albums", {
             name: params.name,
@@ -25,4 +23,4 @@ export const createAlbum = async (
         }
         throw new Error(String(error));
     }
-}
+};

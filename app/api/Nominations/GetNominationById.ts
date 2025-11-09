@@ -6,9 +6,7 @@ export interface ParamsForGetNominationId {
     id: number;
 }
 
-export const getNominationById = async (
-    { id }: ParamsForGetNominationId
-): Promise<Nomination> => {
+export const getNominationById = async ({ id }: ParamsForGetNominationId): Promise<Nomination> => {
     try {
         const response = await api.get(`/nominations/${id}`);
         return response.data as Nomination;

@@ -2,13 +2,9 @@ import { api } from "~/lib/axios";
 import type { Coordinates } from "~/types/coordinates/Coordinates";
 import { isErrorMessage } from "~/types/ErrorMessage";
 
-export interface ParamsForGetCoordinatesId {
-    id: number;
-}
+export interface ParamsForGetCoordinatesId { id: number; }
 
-export const getCoordinatesById = async (
-    { id }: ParamsForGetCoordinatesId
-): Promise<Coordinates> => {
+export const getCoordinatesById = async ({ id }: ParamsForGetCoordinatesId): Promise<Coordinates> => {
     try {
         const response = await api.get(`/coordinates/${id}`);
         return response.data as Coordinates;
