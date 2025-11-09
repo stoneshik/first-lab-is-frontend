@@ -1,5 +1,4 @@
 import { api } from "~/lib/axios";
-import type { Album } from "~/types/album/Album";
 import { isErrorMessage } from "~/types/ErrorMessage";
 
 export type ParamsForUpdateAlbum = {
@@ -10,13 +9,12 @@ export type ParamsForUpdateAlbum = {
 
 export const updateAlbum = async (
     params: ParamsForUpdateAlbum
-): Promise<Album> => {
+): Promise<void> => {
     try {
-        const response = await api.put<Album>(`/albums/${params.id}`, {
+        await api.put(`/albums/${params.id}`, {
             name: params.name,
             length: params.length,
         });
-        return response.data;
     } catch (error) {
         if (error && typeof error === "object" && "response" in error) {
             // @ts-ignore

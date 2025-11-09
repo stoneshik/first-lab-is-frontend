@@ -1,32 +1,28 @@
 import clsx from "clsx";
-import { useCallback, useEffect, useState } from "react";
-import { updateCoordinates, type ParamsForUpdateCoordinates } from "~/api/Coordinates/UpdateCoordinates";
+import { useCallback, useState } from "react";
+import { createAlbum, type ParamsForCreateAlbum } from "~/api/Albums/CreateAlbum";
 import { Button } from "~/components/UI/Button/Button";
-import type { Coordinates } from "~/types/coordinates/Coordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
-import styles from "./CoordinatesEditForm.module.scss";
+import styles from "./AlbumCreateForm.module.scss";
 
-type Props = { coordinates: Coordinates; };
-
-export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
-    const [x, setX] = useState<number>(0);
-    const [y, setY] = useState<number>(0);
+export function AlbumCreateForm() {
+    const [name, setName] = useState<string>("");
+    const [length, setLength] = useState<number>(0);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [successMessage, setSuccessMessage] = useState<string>("");
 
-    useEffect(() => {
-        if (coordinates) {
-            setX(coordinates.x);
-            setY(coordinates.y);
-            setErrorMessage("");
-            setSuccessMessage("");
-        }
-    }, [coordinates]);
-
     const validate = useCallback(() => {
+        if (!name || name.trim().length === 0) {
+            setErrorMessage("Название альбома обязательно");
+            return false;
+        }
+        if (!Number.isFinite(length) || Math.floor(length) <= 0) {
+            setErrorMessage("Длина альбома должна быть положительным целым числом");
+            return false;
+        }
         return true;
-    }, [x, y]);
+    }, [name, length]);
 
     const handleSubmit = useCallback(
         async () => {
@@ -35,13 +31,12 @@ export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
             if (!validate()) { return; }
             setLoading(true);
             try {
-                const params: ParamsForUpdateCoordinates = {
-                    id: coordinates.id,
-                    x: x,
-                    y: Math.floor(y),
+                const params: ParamsForCreateAlbum = {
+                    name: name.trim(),
+                    length: Math.floor(length),
                 };
-                await updateCoordinates(params);
-                setSuccessMessage("Координаты успешно обновлены");
+                await createAlbum(params);
+                setSuccessMessage("Альбом успешно добавлен");
                 setErrorMessage("");
                 setTimeout(() => globalThis.location.reload(), 2000);
             } catch (error) {
@@ -51,36 +46,37 @@ export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
                     setErrorMessage(message);
                     return;
                 }
-                setErrorMessage("Ошибка при обновлении");
+                setErrorMessage("Ошибка при создании");
             } finally { setLoading(false); }
         },
-        [coordinates, x, y, validate]
+        [name, length, validate]
     );
     return (
         <div className={styles.formWrapper}>
             <form className={styles.form} onSubmit={(e) => e?.preventDefault()}>
-                <h2 className={styles.title}>Редактировать координаты</h2>
+                <h2 className={styles.title}>Добавить альбом</h2>
                 <div className={styles.field}>
-                    <label className={styles.label} htmlFor="coordinates-x">x</label>
+                    <label className={styles.label} htmlFor="album-name">Название</label>
                     <input
-                        id="coordinates-x"
+                        id="album-name"
                         className={styles.input}
-                        type="number"
-                        value={Number.isFinite(x) ? x : ""}
-                        onChange={(e) => setX(Number(e.target.value))}
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         disabled={loading}
-                        step={0.01}
+                        maxLength={50}
                         required />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label} htmlFor="coordinates-y">y</label>
+                    <label className={styles.label} htmlFor="album-length">Длина (секунд)</label>
                     <input
-                        id="coordinates-y"
+                        id="album-length"
                         className={styles.input}
                         type="number"
-                        value={Number.isFinite(y) ? y : ""}
-                        onChange={(e) => setY(Number(e.target.value))}
+                        value={Number.isFinite(length) ? length : ""}
+                        onChange={(e) => setLength(Number(e.target.value))}
                         disabled={loading}
+                        min={1}
                         step={1}
                         required />
                 </div>

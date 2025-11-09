@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import type { MusicBand } from "~/types/musicBand/MusicBand";
 
 import { getMusicBandById, type ParamsForGetMusicBandId } from "~/api/MusicBands/GetMusicBandById";
-import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable";
+import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable/MusicBandTable";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import styles from "./MusicBandContent.module.scss";
 

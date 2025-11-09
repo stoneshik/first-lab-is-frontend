@@ -15,7 +15,7 @@ export interface ParamsForGetWrapperListMusicBand {
     page: number;
     size: number;
     sortNameField: SortNameField | null;
-    sortOrder: SortOrder;
+    sortOrder: SortOrder | null;
 }
 
 export const getWrapperListMusicBand = async ({
@@ -41,7 +41,7 @@ export const getWrapperListMusicBand = async ({
         if (bestAlbumName !== "") { params.bestAlbumName = bestAlbumName; }
         if (studioName !== "") { params.studioName = studioName; }
         if (studioAddress !== "") { params.studioAddress = studioAddress; }
-        if (sortNameField !== null) {
+        if (sortNameField !== null && sortOrder !== null) {
             const sortParam = sortNameField + "," + sortOrder;
             params.sort = sortParam;
         }

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import type { ParamsForGetWrapperListMusicBand } from "~/api/MusicBands/GetAllMusicBands";
 import { getWrapperListMusicBand } from "~/api/MusicBands/GetAllMusicBands";
-import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable";
+import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable/MusicBandTable";
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import type { WrapperListMusicBand } from "~/types/musicBand/WrapperListMusicBand";

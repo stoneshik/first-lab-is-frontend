@@ -1,19 +1,18 @@
 import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
 
-export type ParamsForUpdateCoordinates = {
-    id: number;
-    x: number;
-    y: number;
+export type ParamsForCreateAlbum = {
+    name: string;
+    length: number;
 };
 
-export const updateCoordinates = async (
-    params: ParamsForUpdateCoordinates
+export const createAlbum = async (
+    params: ParamsForCreateAlbum
 ): Promise<void> => {
     try {
-        await api.put(`/coordinates/${params.id}`, {
-            x: params.x,
-            y: params.y,
+        await api.post("/albums", {
+            name: params.name,
+            length: params.length,
         });
     } catch (error) {
         if (error && typeof error === "object" && "response" in error) {

@@ -1,32 +1,20 @@
 import clsx from "clsx";
-import { useCallback, useEffect, useState } from "react";
-import { updateCoordinates, type ParamsForUpdateCoordinates } from "~/api/Coordinates/UpdateCoordinates";
+import { useCallback, useState } from "react";
+import { createStudio, type ParamsForCreateStudio } from "~/api/Studios/CreateStudio";
 import { Button } from "~/components/UI/Button/Button";
-import type { Coordinates } from "~/types/coordinates/Coordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
-import styles from "./CoordinatesEditForm.module.scss";
+import styles from "./StudioCreateForm.module.scss";
 
-type Props = { coordinates: Coordinates; };
-
-export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
-    const [x, setX] = useState<number>(0);
-    const [y, setY] = useState<number>(0);
+export function StudioCreateForm() {
+    const [name, setName] = useState<string>("");
+    const [address, setAddress] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [successMessage, setSuccessMessage] = useState<string>("");
 
-    useEffect(() => {
-        if (coordinates) {
-            setX(coordinates.x);
-            setY(coordinates.y);
-            setErrorMessage("");
-            setSuccessMessage("");
-        }
-    }, [coordinates]);
-
     const validate = useCallback(() => {
         return true;
-    }, [x, y]);
+    }, [name, address]);
 
     const handleSubmit = useCallback(
         async () => {
@@ -35,13 +23,12 @@ export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
             if (!validate()) { return; }
             setLoading(true);
             try {
-                const params: ParamsForUpdateCoordinates = {
-                    id: coordinates.id,
-                    x: x,
-                    y: Math.floor(y),
+                const params: ParamsForCreateStudio = {
+                    name: name.trim(),
+                    address: address.trim(),
                 };
-                await updateCoordinates(params);
-                setSuccessMessage("Координаты успешно обновлены");
+                await createStudio(params);
+                setSuccessMessage("Студия успешно добавлена");
                 setErrorMessage("");
                 setTimeout(() => globalThis.location.reload(), 2000);
             } catch (error) {
@@ -51,37 +38,37 @@ export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
                     setErrorMessage(message);
                     return;
                 }
-                setErrorMessage("Ошибка при обновлении");
+                setErrorMessage("Ошибка при добавлении");
             } finally { setLoading(false); }
         },
-        [coordinates, x, y, validate]
+        [name, address, validate]
     );
     return (
         <div className={styles.formWrapper}>
             <form className={styles.form} onSubmit={(e) => e?.preventDefault()}>
-                <h2 className={styles.title}>Редактировать координаты</h2>
+                <h2 className={styles.title}>Добавить студию</h2>
                 <div className={styles.field}>
-                    <label className={styles.label} htmlFor="coordinates-x">x</label>
+                    <label className={styles.label} htmlFor="album-name">Название</label>
                     <input
-                        id="coordinates-x"
+                        id="album-name"
                         className={styles.input}
-                        type="number"
-                        value={Number.isFinite(x) ? x : ""}
-                        onChange={(e) => setX(Number(e.target.value))}
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         disabled={loading}
-                        step={0.01}
+                        maxLength={50}
                         required />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label} htmlFor="coordinates-y">y</label>
+                    <label className={styles.label} htmlFor="album-address">Адрес</label>
                     <input
-                        id="coordinates-y"
+                        id="album-address"
                         className={styles.input}
-                        type="number"
-                        value={Number.isFinite(y) ? y : ""}
-                        onChange={(e) => setY(Number(e.target.value))}
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                         disabled={loading}
-                        step={1}
+                        maxLength={50}
                         required />
                 </div>
                 <div className={styles.actions}>

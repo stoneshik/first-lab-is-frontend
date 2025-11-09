@@ -1,24 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { getWrapperListNomination, type ParamsForGetWrapperListNomination } from "~/api/Nominations/GetAllNominations";
-import { NominationTable } from "~/components/Tables/Nomination/NominationTable";
+import type { ParamsForGetWrapperListMusicBand } from "~/api/MusicBands/GetAllMusicBands";
+import { getWrapperListMusicBand } from "~/api/MusicBands/GetAllMusicBands";
+import { MusicBandSelectTable } from "~/components/Tables/MusicBand/MusicBandSelectTable/MusicBandSelectTable";
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
-import type { WrapperListNomination } from "~/types/nomination/WrapperListNomination";
-import styles from "./NominationsListPage.module.scss";
-import { NominationCreateForm } from "~/components/Forms/Nominations/NominationCreateForm/NominationCreateForm";
+import type { WrapperListMusicBand } from "~/types/musicBand/WrapperListMusicBand";
+import styles from "./MusicBandSelect.module.scss";
 
-export function NominationsListPage() {
-    const [wrapperListNomination, setWrapperListNomination] = useState<WrapperListNomination | null>(null);
+interface MusicBandSelectProps {
+    onSelectMusicBand: (newMusicBandId: number, newMusicBandName: string) => void;
+}
+
+export function MusicBandSelect({ onSelectMusicBand }: Readonly<MusicBandSelectProps>) {
+    const [wrapperListMusicBand, setWrapperListMusicBand] = useState<WrapperListMusicBand | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [page, setPage] = useState<number>(0);
     const [size, setSize] = useState<number>(10);
 
     const load = useCallback(
-        async (params: ParamsForGetWrapperListNomination) => {
+        async (params: ParamsForGetWrapperListMusicBand) => {
             try {
-                const data = await getWrapperListNomination(params);
-                setWrapperListNomination(data);
+                const data = await getWrapperListMusicBand(params);
+                setWrapperListMusicBand(data);
                 setErrorMessage("");
             } catch (error) {
                 if (isErrorMessage(error)) {
@@ -36,7 +40,18 @@ export function NominationsListPage() {
         const fetchData = async () => {
             if (!mounted) return;
             try {
-                await load({page, size});
+                await load({
+                    name: "",
+                    genre: null,
+                    description: "",
+                    bestAlbumName: "",
+                    studioName: "",
+                    studioAddress: "",
+                    page: page,
+                    size: size,
+                    sortNameField: null,
+                    sortOrder: null,
+                });
             } catch {
                 setErrorMessage("Не получилось загрузить данные");
             }
@@ -49,17 +64,17 @@ export function NominationsListPage() {
         };
     }, [page, size, load]);
 
-    const nominations = wrapperListNomination?.nominations;
-    const totalPages = wrapperListNomination?.totalPages ?? 1;
-    const totalElements = wrapperListNomination?.totalElements ?? 0;
+    const musicBands = wrapperListMusicBand?.musicBands;
+    const totalPages = wrapperListMusicBand?.totalPages ?? 1;
+    const totalElements = wrapperListMusicBand?.totalElements ?? 0;
 
     const handlePrevPage = (): void => setPage((p) => Math.max(0, p - 1));
     const handleNextPage = (): void => setPage((p) => Math.min((totalPages - 1), p + 1));
 
     return (
         <div className={styles.wrapper}>
-            <h1>Номинации муз. групп по жанрам</h1>
-            <h2>Всего найдено: {totalElements}</h2>
+            <h2>Музыкальные группы</h2>
+            <h3>Всего найдено: {totalElements}</h3>
             <div className={styles.error}>{errorMessage}</div>
             <div className={styles.controls}>
                 <select
@@ -77,7 +92,7 @@ export function NominationsListPage() {
                 </select>
             </div>
 
-            {nominations && <NominationTable nominations={nominations} />}
+            {musicBands && <MusicBandSelectTable musicBands={musicBands} onSelectMusicBand={onSelectMusicBand} />}
 
             <div className={styles.pagination}>
                 <Button onClick={handlePrevPage} textButton={"Назад"} disabled={page <= 0}/>
@@ -86,8 +101,6 @@ export function NominationsListPage() {
                 </span>
                 <Button onClick={handleNextPage} textButton={"Вперед"} disabled={page >= totalPages - 1}/>
             </div>
-
-            <NominationCreateForm />
         </div>
     );
 }

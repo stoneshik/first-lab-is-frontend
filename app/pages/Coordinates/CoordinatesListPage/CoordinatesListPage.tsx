@@ -6,6 +6,7 @@ import { Button } from "~/components/UI/Button/Button";
 import type { WrapperListCoordinates } from "~/types/coordinates/WrapperListCoordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import styles from "./CoordinatesListPage.module.scss";
+import { CoordinatesCreateForm } from "~/components/Forms/Coordinates/CoordinatesCreateForm/CoordinatesCreateForm";
 
 export function CoordinatesListPage() {
     const [wrapperListCoordinates, setWrapperListCoordinates] = useState<WrapperListCoordinates | null>(null);
@@ -85,6 +86,8 @@ export function CoordinatesListPage() {
                 </span>
                 <Button onClick={handleNextPage} textButton={"Вперед"} disabled={page >= totalPages - 1}/>
             </div>
+
+            {coordinates && <CoordinatesCreateForm />}
         </div>
     );
 }

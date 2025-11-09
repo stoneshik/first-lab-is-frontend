@@ -1,28 +1,16 @@
 import clsx from "clsx";
-import { useCallback, useEffect, useState } from "react";
-import { updateCoordinates, type ParamsForUpdateCoordinates } from "~/api/Coordinates/UpdateCoordinates";
+import { useCallback, useState } from "react";
+import { createCoordinates, type ParamsForCreateCoordinates } from "~/api/Coordinates/CreateCoordinates";
 import { Button } from "~/components/UI/Button/Button";
-import type { Coordinates } from "~/types/coordinates/Coordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
-import styles from "./CoordinatesEditForm.module.scss";
+import styles from "./CoordinatesCreateForm.module.scss";
 
-type Props = { coordinates: Coordinates; };
-
-export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
+export function CoordinatesCreateForm() {
     const [x, setX] = useState<number>(0);
     const [y, setY] = useState<number>(0);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [successMessage, setSuccessMessage] = useState<string>("");
-
-    useEffect(() => {
-        if (coordinates) {
-            setX(coordinates.x);
-            setY(coordinates.y);
-            setErrorMessage("");
-            setSuccessMessage("");
-        }
-    }, [coordinates]);
 
     const validate = useCallback(() => {
         return true;
@@ -35,13 +23,12 @@ export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
             if (!validate()) { return; }
             setLoading(true);
             try {
-                const params: ParamsForUpdateCoordinates = {
-                    id: coordinates.id,
+                const params: ParamsForCreateCoordinates = {
                     x: x,
                     y: Math.floor(y),
                 };
-                await updateCoordinates(params);
-                setSuccessMessage("Координаты успешно обновлены");
+                await createCoordinates(params);
+                setSuccessMessage("Координаты успешно добавлены");
                 setErrorMessage("");
                 setTimeout(() => globalThis.location.reload(), 2000);
             } catch (error) {
@@ -51,15 +38,15 @@ export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
                     setErrorMessage(message);
                     return;
                 }
-                setErrorMessage("Ошибка при обновлении");
+                setErrorMessage("Ошибка при добавлении");
             } finally { setLoading(false); }
         },
-        [coordinates, x, y, validate]
+        [x, y, validate]
     );
     return (
         <div className={styles.formWrapper}>
             <form className={styles.form} onSubmit={(e) => e?.preventDefault()}>
-                <h2 className={styles.title}>Редактировать координаты</h2>
+                <h2 className={styles.title}>Добавление координат</h2>
                 <div className={styles.field}>
                     <label className={styles.label} htmlFor="coordinates-x">x</label>
                     <input

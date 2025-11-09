@@ -6,6 +6,7 @@ import { Button } from "~/components/UI/Button/Button";
 import type { WrapperListAlbum } from "~/types/album/WrapperListAlbum";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import styles from "./AlbumsListPage.module.scss";
+import { AlbumCreateForm } from "~/components/Forms/Albums/AlbumCreateForm/AlbumCreateForm";
 
 export function AlbumsListPage() {
     const [wrapperListAlbum, setWrapperListAlbum] = useState<WrapperListAlbum | null>(null);
@@ -85,6 +86,8 @@ export function AlbumsListPage() {
                 </span>
                 <Button onClick={handleNextPage} textButton={"Вперед"} disabled={page >= totalPages - 1}/>
             </div>
+
+            {albums && <AlbumCreateForm />}
         </div>
     );
 }

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { getWrapperListStudio, type ParamsForGetWrapperListStudio } from "~/api/Studios/GetAllStudios";
+import { StudioCreateForm } from "~/components/Forms/Studios/StudioCreateForm/StudioCreateForm";
 import { StudioTable } from "~/components/Tables/Studio/StudioTable";
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
@@ -85,6 +86,8 @@ export function StudiosListPage() {
                 </span>
                 <Button onClick={handleNextPage} textButton={"Вперед"} disabled={page >= totalPages - 1}/>
             </div>
+
+            {studios && <StudioCreateForm />}
         </div>
     );
 }

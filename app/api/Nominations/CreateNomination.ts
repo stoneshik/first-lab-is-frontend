@@ -1,27 +1,20 @@
 import { api } from "~/lib/axios";
 import { isErrorMessage } from "~/types/ErrorMessage";
-import { MusicGenre } from "~/types/MusicGenre";
-import type { Nomination } from "~/types/nomination/Nomination";
+import type { MusicGenre } from "~/types/MusicGenre";
 
-export type ParamsForUpdateNomination = {
-    id: number;
+export type ParamsForCreateNomination = {
     musicBandId: number;
-    musicBandName: string;
     musicGenre: MusicGenre;
-    nominatedAt: string;
 };
 
-export const updateNomination = async (
-    params: ParamsForUpdateNomination
-): Promise<Nomination> => {
+export const createNomination = async (
+    params: ParamsForCreateNomination
+): Promise<void> => {
     try {
-        const response = await api.put<Nomination>(`/nominations/${params.id}`, {
+        await api.post("/nominations", {
             musicBandId: params.musicBandId,
-            musicBandName: params.musicBandName,
             musicGenre: params.musicGenre,
-            nominatedAt: params.nominatedAt,
         });
-        return response.data;
     } catch (error) {
         if (error && typeof error === "object" && "response" in error) {
             // @ts-ignore
