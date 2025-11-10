@@ -39,4 +39,15 @@ $border_color: #ccc;
         align-items: center;
         gap: 1rem;
     }
+
+    .delete {
+        color: $error_color;
+        margin-top: 28px;
+        font-weight: 400;
+        background-color: $bg-primary-button-active;
+    }
+
+    .delete:hover {
+        background-color: $bg;
+    }
 }

@@ -2,14 +2,17 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import type { MusicBand } from "~/types/musicBand/MusicBand";
 
+import { deleteMusicBand } from "~/api/MusicBands/DeleteMusicBand";
 import { getMusicBandById, type ParamsForGetMusicBandId } from "~/api/MusicBands/GetMusicBandById";
 import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable/MusicBandTable";
+import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import styles from "./MusicBandContent.module.scss";
 
 export function MusicBandContent() {
     const { id } = useParams<{ id: string }>();
     const [musicBand, setMusicBand] = useState<MusicBand | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const load = useCallback(
@@ -50,11 +53,32 @@ export function MusicBandContent() {
         };
     }, [id, load]);
 
+    const handlingDelete = async () => {
+        const musicBandId: number = (id === undefined)? 0 : +id;
+        try {
+            await deleteMusicBand({id: musicBandId});
+            setSuccessMessage("Музыкальная группа успешно удалена");
+            setErrorMessage("");
+            setTimeout(() => globalThis.location.assign('/'), 2000);
+        } catch (error) {
+            if (isErrorMessage(error)) {
+                const message = createMessageStringFromErrorMessage(error);
+                setErrorMessage(message);
+                return;
+            }
+        }
+    };
+
     return (
         <div className={styles.wrapper}>
             <h1>Музыкальная группа</h1>
             <div className={styles.error}>{errorMessage}</div>
             {musicBand && <MusicBandTable musicBands={[musicBand]} />}
+            <Button
+                className={styles.delete}
+                onClick={handlingDelete}
+                textButton={"❌ Удаление музыкальной группы"} />
+            {successMessage && <div className="success">{successMessage}</div>}
         </div>
     );
 }

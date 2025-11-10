@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 
+import { deleteCoordinates } from "~/api/Coordinates/DeleteCoordinates";
 import { getCoordinatesById, type ParamsForGetCoordinatesId } from "~/api/Coordinates/GetCoordinatesById";
 import { CoordinatesEditForm } from "~/components/Forms/Coordinates/CoordinatesEditForm/CoordinatesEditForm";
 import { CoordinatesTable } from "~/components/Tables/Coordinates/CoordinatesTable";
+import { Button } from "~/components/UI/Button/Button";
 import type { Coordinates } from "~/types/coordinates/Coordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import styles from "./CoordinatesByIdPage.module.scss";
@@ -11,6 +13,7 @@ import styles from "./CoordinatesByIdPage.module.scss";
 export function CoordinatesByIdPage() {
     const { id } = useParams<{ id: string }>();
     const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const load = useCallback(
@@ -49,12 +52,33 @@ export function CoordinatesByIdPage() {
         };
     }, [id, load]);
 
+    const handlingDelete = async () => {
+        const coordinatesId: number = (id === undefined)? 0 : +id;
+        try {
+            await deleteCoordinates({id: coordinatesId});
+            setSuccessMessage("Координаты успешно удалены");
+            setErrorMessage("");
+            setTimeout(() => globalThis.location.assign('/coordinates'), 2000);
+        } catch (error) {
+            if (isErrorMessage(error)) {
+                const message = createMessageStringFromErrorMessage(error);
+                setErrorMessage(message);
+                return;
+            }
+        }
+    };
+
     return (
         <div className={styles.wrapper}>
             <h1>Координаты муз. групп</h1>
             <div className={styles.error}>{errorMessage}</div>
             {coordinates && <CoordinatesTable coordinates={[coordinates]} />}
             {coordinates && <CoordinatesEditForm coordinates={coordinates} />}
+            <Button
+                className={styles.delete}
+                onClick={handlingDelete}
+                textButton={"❌ Удаление координат"} />
+            {successMessage && <div className="success">{successMessage}</div>}
         </div>
     );
 }

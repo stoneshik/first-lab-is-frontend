@@ -3,7 +3,7 @@ import { isErrorMessage } from "~/types/ErrorMessage";
 
 export interface ParamsForDeleteAlbum { id: number; }
 
-export const updateAlbum = async ({ id }: ParamsForDeleteAlbum): Promise<void> => {
+export const deleteAlbum = async ({ id }: ParamsForDeleteAlbum): Promise<void> => {
     try {
         await api.delete(`/albums/${id}`);
     } catch (error) {
