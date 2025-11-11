@@ -63,9 +63,23 @@ export const MusicBandSelectTable = (
                         <td>{new Date(band.creationDate).toLocaleString("ru-RU")}</td>
                         <td>{new Date(band.establishmentDate).toLocaleDateString("ru-RU")}</td>
                         <td>{band.description || "-"}</td>
-                        <td> x: {band.coordinates.x}, y: {band.coordinates.y} </td>
-                        <td>{band.studio ? `${band.studio.name} (${band.studio.address})` : "-"}</td>
-                        <td>{band.bestAlbum ? `${band.bestAlbum.name} (${band.bestAlbum.length} сек)` : "-"}</td>
+                        <td>
+                            <Link to={`/coordinates/${band.coordinates.id}`}>
+                                x: {band.coordinates.x}, y: {band.coordinates.y}
+                            </Link>
+                        </td>
+                        {band.studio !== null && <td>
+                            <Link to={`/studios/${band.studio.id}`}>
+                                {`${band.studio.name} (${band.studio.address})`}
+                            </Link>
+                        </td>}
+                        {band.studio === null && <td>-</td>}
+                        {band.bestAlbum !== null && <td>
+                            <Link to={`/albums/${band.bestAlbum.id}`}>
+                                {`${band.bestAlbum.name} (${band.bestAlbum.length} сек)`}
+                            </Link>
+                        </td>}
+                        {band.studio === null && <td>-</td>}
                     </tr>
                 )
             )}

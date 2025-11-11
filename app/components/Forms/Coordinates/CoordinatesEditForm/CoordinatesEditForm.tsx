@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { useCallback, useEffect, useState } from "react";
 import { updateCoordinates, type ParamsForUpdateCoordinates } from "~/api/Coordinates/UpdateCoordinates";
 import { Button } from "~/components/UI/Button/Button";
@@ -89,8 +88,8 @@ export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
                     <Button onClick={handleSubmit} textButton={loading ? "Обновление..." : "Обновить"} disabled={loading} />
                 </div>
                 <div className={styles.feedback}>
-                    {errorMessage && <div className={clsx(styles.error)} role="alert">{errorMessage}</div>}
-                    {successMessage && <div className={clsx(styles.success)}>{successMessage}</div>}
+                    {errorMessage && <div className={styles.error} role="alert">{errorMessage}</div>}
+                    {successMessage && <div className={styles.success}>{successMessage}</div>}
                 </div>
             </form>
         </div>

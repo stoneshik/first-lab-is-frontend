@@ -1,15 +1,13 @@
 import { useCallback, useState } from "react";
-import { createNomination, type ParamsForCreateNomination } from "~/api/Nominations/CreateNomination";
+import { addSingleToBand, type ParamsForAddSingleToBand } from "~/api/MusicBands/AddSingleToBand";
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
-import { MusicGenre, MusicGenreDictionary } from "~/types/MusicGenre";
 import { MusicBandSelect } from "../../MusicBands/MusicBandSelect/MusicBandSelect";
-import styles from "./NominationCreateForm.module.scss";
+import styles from "./AddSingleToBandForm.module.scss";
 
-export function NominationCreateForm() {
+export function AddSingleToBandForm() {
     const [musicBandId, setMusicBandId] = useState<number>(0);
     const [musicBandName, setMusicBandName] = useState<string>("");
-    const [musicGenre, setMusicGenre] = useState<MusicGenre>(MusicGenre.BRIT_POP);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [successMessage, setSuccessMessage] = useState<string>("");
@@ -20,7 +18,7 @@ export function NominationCreateForm() {
             return false;
         }
         return true;
-    }, [musicBandId, musicGenre]);
+    }, [musicBandId]);
 
     const handleSubmit = useCallback(
         async () => {
@@ -29,14 +27,11 @@ export function NominationCreateForm() {
             if (!validate()) { return; }
             setLoading(true);
             try {
-                const params: ParamsForCreateNomination = {
-                    musicBandId: Math.floor(musicBandId),
-                    musicGenre: musicGenre,
-                };
-                await createNomination(params);
-                setSuccessMessage("Музыкальная группа успешно номинирована");
+                const params: ParamsForAddSingleToBand = { id: Math.floor(musicBandId) };
+                await addSingleToBand(params);
+                setSuccessMessage("Музыкальной группе добавлен сингл");
                 setErrorMessage("");
-                setTimeout(() => globalThis.location.reload(), 2000);
+                setTimeout(() => globalThis.location.assign("/"), 2000);
             } catch (error) {
                 if (import.meta.env.DEV) { console.log(error); }
                 if (isErrorMessage(error)) {
@@ -44,10 +39,10 @@ export function NominationCreateForm() {
                     setErrorMessage(message);
                     return;
                 }
-                setErrorMessage("Ошибка при номинировании");
+                setErrorMessage("Ошибка при добавлении сингла муз. группе");
             } finally { setLoading(false); }
         },
-        [musicBandId, musicGenre, validate]
+        [musicBandId, validate]
     );
 
     const handleSelectMusicBand = (newMusicBandId: number, newMusicBandName: string): void => {
@@ -58,20 +53,10 @@ export function NominationCreateForm() {
     return (
         <div className={styles.formWrapper}>
             <form className={styles.form} onSubmit={(e) => e?.preventDefault()}>
-                <h2>Номинация музыкальной группы</h2>
-                <select
-                    name="music_genre"
-                    value={musicGenre as string}
-                    onChange={(e) => setMusicGenre(e.target.value as MusicGenre)}>
-                    {Object.values(MusicGenre).map((s) => (
-                        <option key={s} value={s}>
-                            { MusicGenreDictionary[s] }
-                        </option>
-                    ))}
-                </select>
+                <h2>Добавление муз. группе сингла</h2>
                 <h3>Выбранная муз. группа: { (musicBandId === 0)? "" : `${musicBandId} - ${musicBandName}`}</h3>
                 <div className={styles.actions}>
-                    <Button onClick={handleSubmit} textButton={loading ? "Номинирование..." : "Номинировать"} disabled={loading} />
+                    <Button onClick={handleSubmit} textButton={loading ? "Добавление сингла..." : "Добавить сингл"} disabled={loading} />
                 </div>
                 <div className={styles.feedback}>
                     {errorMessage && <div className={styles.error} role="alert">{errorMessage}</div>}

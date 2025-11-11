@@ -27,11 +27,12 @@ $color-muted-text: #6b7280;
     }
 
     &__logo {
+        width: 275px;
         font-weight: 700;
         color: $color-text;
         text-decoration: none;
         &:hover {
-        text-decoration: underline;
+            text-decoration: underline;
         }
     }
 
@@ -122,6 +123,10 @@ $color-muted-text: #6b7280;
             background: $bg_primary-active;
             color: $color-text-active;
             font-weight: 600;
+        }
+
+        &--active#music-bands-nav {
+            width: 125px;
         }
     }
 

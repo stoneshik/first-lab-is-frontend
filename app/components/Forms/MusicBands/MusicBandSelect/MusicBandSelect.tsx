@@ -6,6 +6,8 @@ import { MusicBandSelectTable } from "~/components/Tables/MusicBand/MusicBandSel
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import type { WrapperListMusicBand } from "~/types/musicBand/WrapperListMusicBand";
+import { SortNameField } from "~/types/SortNameField";
+import { SortOrder } from "~/types/SortOrder";
 import styles from "./MusicBandSelect.module.scss";
 
 interface MusicBandSelectProps {
@@ -17,6 +19,8 @@ export function MusicBandSelect({ onSelectMusicBand }: Readonly<MusicBandSelectP
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [page, setPage] = useState<number>(0);
     const [size, setSize] = useState<number>(5);
+    const [sortNameField] = useState<SortNameField>(SortNameField.NAME);
+    const [sortOrder] = useState<SortOrder>(SortOrder.ASC);
 
     const load = useCallback(
         async (params: ParamsForGetWrapperListMusicBand) => {
@@ -49,8 +53,8 @@ export function MusicBandSelect({ onSelectMusicBand }: Readonly<MusicBandSelectP
                     studioAddress: "",
                     page: page,
                     size: size,
-                    sortNameField: null,
-                    sortOrder: null,
+                    sortNameField: sortNameField,
+                    sortOrder: sortOrder,
                 });
             } catch {
                 setErrorMessage("Не получилось загрузить данные");

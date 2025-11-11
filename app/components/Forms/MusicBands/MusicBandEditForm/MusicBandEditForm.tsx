@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { useCallback, useEffect, useState } from "react";
 import { updateMusicBand, type ParamsForUpdateMusicBand } from "~/api/MusicBands/UpdateMusicBand";
 import { Button } from "~/components/UI/Button/Button";
@@ -450,8 +449,8 @@ export function MusicBandEditForm({ musicBand }: Readonly<Props>) {
                     <Button onClick={handleSubmit} textButton={loading ? "Обновление..." : "Обновить"} disabled={loading} />
                 </div>
                 <div className={styles.feedback}>
-                    {errorMessage && <div className={clsx(styles.error)} role="alert">{errorMessage}</div>}
-                    {successMessage && <div className={clsx(styles.success)}>{successMessage}</div>}
+                    {errorMessage && <div className={styles.error} role="alert">{errorMessage}</div>}
+                    {successMessage && <div className={styles.success}>{successMessage}</div>}
                 </div>
             </form>
             <CoordinatesSelect onSelectCoordinates={handleSelectCoordinates} />

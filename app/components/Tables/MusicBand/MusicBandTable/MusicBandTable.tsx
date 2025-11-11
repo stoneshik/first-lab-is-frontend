@@ -46,23 +46,23 @@ export const MusicBandTable = ({ musicBands } : MusicBandTableProps): JSX.Elemen
                         <td>{new Date(band.creationDate).toLocaleString("ru-RU")}</td>
                         <td>{new Date(band.establishmentDate).toLocaleDateString("ru-RU")}</td>
                         <td>{band.description || "-"}</td>
-                        {band.coordinates && <td>
+                        <td>
                             <Link to={`/coordinates/${band.coordinates.id}`}>
                                 x: {band.coordinates.x}, y: {band.coordinates.y}
                             </Link>
-                        </td>}
-                        {band.studio && <td>
-                            <Link to={`/studios/${band.studio?.id}`}>
+                        </td>
+                        {band.studio !== null && <td>
+                            <Link to={`/studios/${band.studio.id}`}>
                                 {`${band.studio.name} (${band.studio.address})`}
                             </Link>
                         </td>}
-                        {!band.studio && <td>-</td>}
-                        {band.bestAlbum && <td>
-                            <Link to={`/albums/${band.bestAlbum?.id}`}>
+                        {band.studio === null && <td>-</td>}
+                        {band.bestAlbum !== null && <td>
+                            <Link to={`/albums/${band.bestAlbum.id}`}>
                                 {`${band.bestAlbum.name} (${band.bestAlbum.length} сек)`}
                             </Link>
                         </td>}
-                        {!band.studio && <td>-</td>}
+                        {band.studio === null && <td>-</td>}
                     </tr>
                 )
             )}
