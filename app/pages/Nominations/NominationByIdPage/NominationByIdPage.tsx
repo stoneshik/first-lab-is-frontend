@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 
 import { deleteNomination } from "~/api/Nominations/DeleteNomination";
 import { getNominationById, type ParamsForGetNominationId } from "~/api/Nominations/GetNominationById";
-import { NominationTable } from "~/components/Tables/Nomination/NominationTable";
+import { NominationTable } from "~/components/Tables/Nomination/NominationTable/NominationTable";
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import type { Nomination } from "~/types/nomination/Nomination";

@@ -1,28 +1,31 @@
 import { useCallback, useEffect, useState } from "react";
 
-import type { ParamsForGetWrapperListMusicBand } from "~/api/MusicBands/GetAllMusicBands";
-import { getWrapperListMusicBand } from "~/api/MusicBands/GetAllMusicBands";
-import { MusicBandSelectTable } from "~/components/Tables/MusicBand/MusicBandSelectTable/MusicBandSelectTable";
+import { getWrapperListCoordinates, type ParamsForGetWrapperListCoordinates } from "~/api/Coordinates/GetAllCoordinates";
+import { CoordinatesTableSelect } from "~/components/Tables/Coordinates/CoordinatesTableSelect/CoordinatesTableSelect";
 import { Button } from "~/components/UI/Button/Button";
+import type { WrapperListCoordinates } from "~/types/coordinates/WrapperListCoordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
-import type { WrapperListMusicBand } from "~/types/musicBand/WrapperListMusicBand";
-import styles from "./MusicBandSelect.module.scss";
+import styles from "./CoordinatesSelect.module.scss";
 
-interface MusicBandSelectProps {
-    onSelectMusicBand: (newMusicBandId: number, newMusicBandName: string) => void;
+interface CoordinatesSelectProps {
+    onSelectCoordinates: (
+        newCoordinatesId: number | null,
+        newCoordinatesX: number | null,
+        newCoordinatesY: number | null
+    ) => void;
 }
 
-export function MusicBandSelect({ onSelectMusicBand }: Readonly<MusicBandSelectProps>) {
-    const [wrapperListMusicBand, setWrapperListMusicBand] = useState<WrapperListMusicBand | null>(null);
+export function CoordinatesSelect({ onSelectCoordinates }: Readonly<CoordinatesSelectProps>) {
+    const [wrapperListCoordinates, setWrapperListCoordinates] = useState<WrapperListCoordinates | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [page, setPage] = useState<number>(0);
     const [size, setSize] = useState<number>(5);
 
     const load = useCallback(
-        async (params: ParamsForGetWrapperListMusicBand) => {
+        async (params: ParamsForGetWrapperListCoordinates) => {
             try {
-                const data = await getWrapperListMusicBand(params);
-                setWrapperListMusicBand(data);
+                const data = await getWrapperListCoordinates(params);
+                setWrapperListCoordinates(data);
                 setErrorMessage("");
             } catch (error) {
                 if (isErrorMessage(error)) {
@@ -40,18 +43,7 @@ export function MusicBandSelect({ onSelectMusicBand }: Readonly<MusicBandSelectP
         const fetchData = async () => {
             if (!mounted) return;
             try {
-                await load({
-                    name: "",
-                    genre: null,
-                    description: "",
-                    bestAlbumName: "",
-                    studioName: "",
-                    studioAddress: "",
-                    page: page,
-                    size: size,
-                    sortNameField: null,
-                    sortOrder: null,
-                });
+                await load({page: page, size: size});
             } catch {
                 setErrorMessage("Не получилось загрузить данные");
             }
@@ -64,16 +56,16 @@ export function MusicBandSelect({ onSelectMusicBand }: Readonly<MusicBandSelectP
         };
     }, [page, size, load]);
 
-    const musicBands = wrapperListMusicBand?.musicBands;
-    const totalPages = wrapperListMusicBand?.totalPages ?? 1;
-    const totalElements = wrapperListMusicBand?.totalElements ?? 0;
+    const coordinates = wrapperListCoordinates?.coordinates;
+    const totalPages = wrapperListCoordinates?.totalPages ?? 1;
+    const totalElements = wrapperListCoordinates?.totalElements ?? 0;
 
     const handlePrevPage = (): void => setPage((p) => Math.max(0, p - 1));
     const handleNextPage = (): void => setPage((p) => Math.min((totalPages - 1), p + 1));
 
     return (
         <div className={styles.wrapper}>
-            <h2>Музыкальные группы</h2>
+            <h2>Координаты</h2>
             <h3>Всего найдено: {totalElements}</h3>
             <div className={styles.error}>{errorMessage}</div>
             <div className={styles.controls}>
@@ -92,7 +84,7 @@ export function MusicBandSelect({ onSelectMusicBand }: Readonly<MusicBandSelectP
                 </select>
             </div>
 
-            {musicBands && <MusicBandSelectTable musicBands={musicBands} onSelectMusicBand={onSelectMusicBand} />}
+            {coordinates && <CoordinatesTableSelect coordinates={coordinates} onSelectCoordinates={onSelectCoordinates} />}
 
             <div className={styles.pagination}>
                 <Button onClick={handlePrevPage} textButton={"Назад"} disabled={page <= 0}/>

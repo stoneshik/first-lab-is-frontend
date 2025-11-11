@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import { deleteStudio } from "~/api/Studios/DeleteStudio";
 import { getStudioById, type ParamsForGetStudioId } from "~/api/Studios/GetStudioById";
 import { StudioEditForm } from "~/components/Forms/Studios/StudioEditForm/StudioEditForm";
-import { StudioTable } from "~/components/Tables/Studio/StudioTable";
+import { StudioTable } from "~/components/Tables/Studio/StudioTable/StudioTable";
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import type { Studio } from "~/types/studio/Studio";

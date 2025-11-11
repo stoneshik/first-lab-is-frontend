@@ -56,6 +56,7 @@ export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
         },
         [coordinates, x, y, validate]
     );
+
     return (
         <div className={styles.formWrapper}>
             <form className={styles.form} onSubmit={(e) => e?.preventDefault()}>

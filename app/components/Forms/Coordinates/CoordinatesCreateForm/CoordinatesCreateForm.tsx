@@ -43,6 +43,7 @@ export function CoordinatesCreateForm() {
         },
         [x, y, validate]
     );
+
     return (
         <div className={styles.formWrapper}>
             <form className={styles.form} onSubmit={(e) => e?.preventDefault()}>

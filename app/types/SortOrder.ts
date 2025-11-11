@@ -3,7 +3,6 @@ export enum SortOrder {
     DESC = "desc",
 }
 
-
 export interface SortOrderDictionary {
     [key: string]: string;
 }

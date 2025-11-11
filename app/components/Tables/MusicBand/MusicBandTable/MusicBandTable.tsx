@@ -5,7 +5,7 @@ import { MusicGenreDictionary } from "~/types/MusicGenre";
 import { Link } from "react-router";
 
 interface MusicBandTableProps {
-    musicBands: MusicBand[]
+    musicBands: MusicBand[];
 }
 
 export const MusicBandTable = ({ musicBands } : MusicBandTableProps): JSX.Element => {
@@ -30,7 +30,11 @@ export const MusicBandTable = ({ musicBands } : MusicBandTableProps): JSX.Elemen
             {musicBands.map(
                 (band) => (
                     <tr key={band.id}>
-                        <td>{band.id}</td>
+                        <td>
+                            <Link to={`/music-bands/${band.id}`}>
+                                {band.id}
+                            </Link>
+                        </td>
                         <td>
                             <Link to={`/music-bands/${band.id}`}>
                                 {band.name}
@@ -42,13 +46,25 @@ export const MusicBandTable = ({ musicBands } : MusicBandTableProps): JSX.Elemen
                         <td>{new Date(band.creationDate).toLocaleString("ru-RU")}</td>
                         <td>{new Date(band.establishmentDate).toLocaleDateString("ru-RU")}</td>
                         <td>{band.description || "-"}</td>
-                        <td> x: {band.coordinates.x}, y: {band.coordinates.y} </td>
-                        <td>{band.studio ? `${band.studio.name} (${band.studio.address})` : "-"}</td>
-                        <td>{band.bestAlbum ? `${band.bestAlbum.name} (${band.bestAlbum.length} сек)` : "-"}</td>
+                        <td>
+                            <Link to={`/coordinates/${band.coordinates.id}`}>
+                                x: {band.coordinates.x}, y: {band.coordinates.y}
+                            </Link>
+                        </td>
+                        <td>
+                            <Link to={`/studios/${band.studio?.id}`}>
+                                {band.studio ? `${band.studio.name} (${band.studio.address})` : "-"}
+                            </Link>
+                        </td>
+                        <td>
+                            <Link to={`/albums/${band.bestAlbum?.id}`}>
+                                {band.bestAlbum ? `${band.bestAlbum.name} (${band.bestAlbum.length} сек)` : "-"}
+                            </Link>
+                        </td>
                     </tr>
                 )
             )}
             </tbody>
         </table>
     );
-}
+};

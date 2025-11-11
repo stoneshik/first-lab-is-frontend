@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import { deleteCoordinates } from "~/api/Coordinates/DeleteCoordinates";
 import { getCoordinatesById, type ParamsForGetCoordinatesId } from "~/api/Coordinates/GetCoordinatesById";
 import { CoordinatesEditForm } from "~/components/Forms/Coordinates/CoordinatesEditForm/CoordinatesEditForm";
-import { CoordinatesTable } from "~/components/Tables/Coordinates/CoordinatesTable";
+import { CoordinatesTable } from "~/components/Tables/Coordinates/CoordinatesTable/CoordinatesTable";
 import { Button } from "~/components/UI/Button/Button";
 import type { Coordinates } from "~/types/coordinates/Coordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";

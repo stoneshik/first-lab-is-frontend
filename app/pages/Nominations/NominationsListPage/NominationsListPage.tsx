@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { getWrapperListNomination, type ParamsForGetWrapperListNomination } from "~/api/Nominations/GetAllNominations";
-import { NominationTable } from "~/components/Tables/Nomination/NominationTable";
+import { NominationTable } from "~/components/Tables/Nomination/NominationTable/NominationTable";
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import type { WrapperListNomination } from "~/types/nomination/WrapperListNomination";

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { getWrapperListAlbum, type ParamsForGetWrapperListAlbum } from "~/api/Albums/GetAllAlbums";
-import { AlbumTable } from "~/components/Tables/Album/AlbumTable";
+import { AlbumTable } from "~/components/Tables/Album/AlbumTable/AlbumTable";
 import { Button } from "~/components/UI/Button/Button";
 import type { WrapperListAlbum } from "~/types/album/WrapperListAlbum";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";

@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import { deleteAlbum } from "~/api/Albums/DeleteAlbum";
 import { getAlbumById, type ParamsForGetAlbumId } from "~/api/Albums/GetAlbumById";
 import { AlbumEditForm } from "~/components/Forms/Albums/AlbumEditForm/AlbumEditForm";
-import { AlbumTable } from "~/components/Tables/Album/AlbumTable";
+import { AlbumTable } from "~/components/Tables/Album/AlbumTable/AlbumTable";
 import { Button } from "~/components/UI/Button/Button";
 import type { Album } from "~/types/album/Album";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";

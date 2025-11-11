@@ -211,9 +211,7 @@ export function HomeContent() {
 
             <div className={styles.pagination}>
                 <Button onClick={handlePrevPage} textButton={"Назад"} disabled={page <= 0}/>
-                <span>
-                    Страница {page + 1} из {totalPages}
-                </span>
+                <span>Страница {page + 1} из {totalPages}</span>
                 <Button onClick={handleNextPage} textButton={"Вперед"} disabled={page >= totalPages - 1}/>
             </div>
         </div>

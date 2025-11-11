@@ -15,7 +15,6 @@ export const MusicBandSelectTable = (
     const [selectedBandId, setSelectedBandId] = useState<number | null>(null);
 
     const handleClickOnSelectMusicBand = (
-        _: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
         bandId: number,
         bandName: string
     ): void => {
@@ -46,9 +45,13 @@ export const MusicBandSelectTable = (
                 (band) => (
                     <tr
                         key={band.id}
-                        onClick={ (e) => handleClickOnSelectMusicBand(e, band.id, band.name) }>
+                        onClick={ (e) => handleClickOnSelectMusicBand(band.id, band.name) }>
                         <td className={ band.id === selectedBandId ? styles.active : "inactive" }>+</td>
-                        <td>{band.id}</td>
+                        <td>
+                            <Link to={`/music-bands/${band.id}`}>
+                                {band.id}
+                            </Link>
+                        </td>
                         <td>
                             <Link to={`/music-bands/${band.id}`}>
                                 {band.name}
@@ -69,4 +72,4 @@ export const MusicBandSelectTable = (
             </tbody>
         </table>
     );
-}
+};

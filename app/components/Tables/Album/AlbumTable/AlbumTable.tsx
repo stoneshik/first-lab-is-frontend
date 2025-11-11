@@ -38,4 +38,4 @@ export const AlbumTable = ({ albums } : AlbumTableProps): JSX.Element => {
             </tbody>
         </table>
     );
-}
+};

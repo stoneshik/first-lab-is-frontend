@@ -4,7 +4,7 @@ import type { Coordinates } from "~/types/coordinates/Coordinates";
 import styles from "./CoordinatesTable.module.scss";
 
 interface CoordinatesTableProps {
-    coordinates: Coordinates[]
+    coordinates: Coordinates[];
 }
 
 export const CoordinatesTable = ({ coordinates } : CoordinatesTableProps): JSX.Element => {
@@ -34,4 +34,4 @@ export const CoordinatesTable = ({ coordinates } : CoordinatesTableProps): JSX.E
             </tbody>
         </table>
     );
-}
+};

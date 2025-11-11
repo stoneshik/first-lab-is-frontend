@@ -5,7 +5,7 @@ import type { Nomination } from "~/types/nomination/Nomination";
 import styles from "./NominationTable.module.scss";
 
 interface NominationTableProps {
-    nominations: Nomination[]
+    nominations: Nomination[];
 }
 
 export const NominationTable = ({ nominations } : NominationTableProps): JSX.Element => {
@@ -43,4 +43,4 @@ export const NominationTable = ({ nominations } : NominationTableProps): JSX.Ele
             </tbody>
         </table>
     );
-}
+};

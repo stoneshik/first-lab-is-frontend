@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { getWrapperListCoordinates, type ParamsForGetWrapperListCoordinates } from "~/api/Coordinates/GetAllCoordinates";
-import { CoordinatesTable } from "~/components/Tables/Coordinates/CoordinatesTable";
+import { CoordinatesTable } from "~/components/Tables/Coordinates/CoordinatesTable/CoordinatesTable";
 import { Button } from "~/components/UI/Button/Button";
 import type { WrapperListCoordinates } from "~/types/coordinates/WrapperListCoordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";

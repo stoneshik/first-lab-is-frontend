@@ -4,7 +4,7 @@ import type { Studio } from "~/types/studio/Studio";
 import styles from "./StudioTable.module.scss";
 
 interface StudioTableProps {
-    studios: Studio[]
+    studios: Studio[];
 }
 
 export const StudioTable = ({ studios } : StudioTableProps): JSX.Element => {
@@ -38,4 +38,4 @@ export const StudioTable = ({ studios } : StudioTableProps): JSX.Element => {
             </tbody>
         </table>
     );
-}
+};
