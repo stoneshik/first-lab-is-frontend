@@ -1,4 +1,4 @@
-$breakpoint-md: 980px;
+$breakpoint-md: 1000px;
 $bg: #fff;
 $bg_primary: $bg-primary-button-active;
 $bg_primary-active: $bg-primary-button;
@@ -145,5 +145,13 @@ $color-muted-text: #6b7280;
         &__nav--open {
             max-height: 400px;
         }
+
+        #music-bands-nav {
+            width: 98%;
+        }
     }
+}
+
+#music-bands-nav {
+    width: 115px;
 }
