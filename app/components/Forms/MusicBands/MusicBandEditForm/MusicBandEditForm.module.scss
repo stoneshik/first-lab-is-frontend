@@ -2,13 +2,15 @@ $border_color: #ccc;
 
 .form-wrapper {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     flex-wrap: wrap;
 }
 
 .form {
     width: 500px;
     margin-top: 1rem;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
     padding: 1rem;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
