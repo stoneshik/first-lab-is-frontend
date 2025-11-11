@@ -72,7 +72,7 @@ export function StudioCreateForm() {
                         required />
                 </div>
                 <div className={styles.actions}>
-                    <Button onClick={handleSubmit} textButton={loading ? "Сохранение..." : "Сохранить"} disabled={loading} />
+                    <Button onClick={handleSubmit} textButton={loading ? "Добавление..." : "Добавить"} disabled={loading} />
                 </div>
                 <div className={styles.feedback}>
                     {errorMessage && <div className={clsx(styles.error)} role="alert">{errorMessage}</div>}

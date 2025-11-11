@@ -59,7 +59,7 @@ export function StudioEditForm({ studio }: Readonly<Props>) {
     return (
         <div className={styles.formWrapper}>
             <form className={styles.form} onSubmit={(e) => e?.preventDefault()}>
-                <h2 className={styles.title}>Редактировать студию</h2>
+                <h2 className={styles.title}>Обновить студию</h2>
                 <div className={styles.field}>
                     <label className={styles.label} htmlFor="album-name">Название</label>
                     <input
@@ -85,7 +85,7 @@ export function StudioEditForm({ studio }: Readonly<Props>) {
                         required />
                 </div>
                 <div className={styles.actions}>
-                    <Button onClick={handleSubmit} textButton={loading ? "Сохранение..." : "Сохранить"} disabled={loading} />
+                    <Button onClick={handleSubmit} textButton={loading ? "Обновление..." : "Обновить"} disabled={loading} />
                 </div>
                 <div className={styles.feedback}>
                     {errorMessage && <div className={clsx(styles.error)} role="alert">{errorMessage}</div>}

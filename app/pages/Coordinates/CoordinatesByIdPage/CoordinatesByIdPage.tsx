@@ -72,12 +72,11 @@ export function CoordinatesByIdPage() {
         <div className={styles.wrapper}>
             <h1>Координаты муз. групп</h1>
             <div className={styles.error}>{errorMessage}</div>
+            {!coordinates && <div className={styles.error}>Координаты не найдены</div>}
             {coordinates && <CoordinatesTable coordinates={[coordinates]} />}
             {coordinates && <CoordinatesEditForm coordinates={coordinates} />}
-            <Button
-                className={styles.delete}
-                onClick={handlingDelete}
-                textButton={"❌ Удаление координат"} />
+            {coordinates &&
+                <Button className={styles.delete} onClick={handlingDelete} textButton={"❌ Удаление координат"} /> }
             {successMessage && <div className="success">{successMessage}</div>}
         </div>
     );

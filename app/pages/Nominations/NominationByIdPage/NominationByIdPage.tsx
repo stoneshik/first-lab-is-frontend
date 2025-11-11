@@ -71,11 +71,10 @@ export function NominationByIdPage() {
         <div className={styles.wrapper}>
             <h1>Номинация муз. группы</h1>
             <div className={styles.error}>{errorMessage}</div>
+            {!nomination && <div className={styles.error}>Номинация не найдена</div>}
             {nomination && <NominationTable nominations={[nomination]} />}
-            <Button
-                className={styles.delete}
-                onClick={handlingDelete}
-                textButton={"❌ Удаление номинации"} />
+            {nomination &&
+                <Button className={styles.delete} onClick={handlingDelete} textButton={"❌ Удаление номинации"} /> }
             {successMessage && <div className="success">{successMessage}</div>}
         </div>
     );

@@ -8,6 +8,7 @@ import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable/Mus
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import styles from "./MusicBandContent.module.scss";
+import { MusicBandEditForm } from "~/components/Forms/MusicBands/MusicBandEditForm/MusicBandEditForm";
 
 export function MusicBandContent() {
     const { id } = useParams<{ id: string }>();
@@ -73,11 +74,11 @@ export function MusicBandContent() {
         <div className={styles.wrapper}>
             <h1>Музыкальная группа</h1>
             <div className={styles.error}>{errorMessage}</div>
+            {!musicBand && <div className={styles.error}>Музыкальная группа не найдена</div>}
             {musicBand && <MusicBandTable musicBands={[musicBand]} />}
-            <Button
-                className={styles.delete}
-                onClick={handlingDelete}
-                textButton={"❌ Удаление музыкальной группы"} />
+            {musicBand && <MusicBandEditForm musicBand={musicBand} />}
+            {musicBand &&
+                <Button className={styles.delete} onClick={handlingDelete} textButton={"❌ Удаление музыкальной группы"} /> }
             {successMessage && <div className="success">{successMessage}</div>}
         </div>
     );

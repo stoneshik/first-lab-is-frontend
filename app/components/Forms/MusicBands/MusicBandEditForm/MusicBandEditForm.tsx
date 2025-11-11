@@ -1,18 +1,21 @@
 import clsx from "clsx";
-import { useCallback, useState } from "react";
-import { createMusicBand, type ParamsForCreateMusicBand } from "~/api/MusicBands/CreateMusicBand";
+import { useCallback, useEffect, useState } from "react";
+import { updateMusicBand, type ParamsForUpdateMusicBand } from "~/api/MusicBands/UpdateMusicBand";
 import { Button } from "~/components/UI/Button/Button";
-import type { AlbumRequestCreate } from "~/types/album/AlbumRequestCreate";
-import type { CoordinatesRequestCreate } from "~/types/coordinates/CoordinatesRequestCreate";
+import type { AlbumRequestUpdate } from "~/types/album/AlbumRequestUpdate";
+import type { CoordinatesRequestUpdate } from "~/types/coordinates/CoordinatesRequestUpdate";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
+import type { MusicBand } from "~/types/musicBand/MusicBand";
 import { MusicGenre, MusicGenreDictionary } from "~/types/MusicGenre";
-import type { StudioRequestCreate } from "~/types/studio/StudioRequestCreate";
+import type { StudioRequestUpdate } from "~/types/studio/StudioRequestUpdate";
 import { AlbumSelect } from "../../Albums/AlbumSelect/AlbumSelect";
 import { CoordinatesSelect } from "../../Coordinates/CoordinatesSelect/CoordinatesSelect";
 import { StudioSelect } from "../../Studios/StudioSelect/StudioSelect";
-import styles from "./MusicBandCreateForm.module.scss";
+import styles from "./MusicBandEditForm.module.scss";
 
-export function MusicBandCreateForm() {
+type Props = { musicBand: MusicBand; };
+
+export function MusicBandEditForm({ musicBand }: Readonly<Props>) {
     const [name, setName] = useState<string>("");
 
     const [coordinatesX, setCoordinatesX] = useState<number | null>(null);
@@ -38,6 +41,45 @@ export function MusicBandCreateForm() {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [successMessage, setSuccessMessage] = useState<string>("");
+
+    useEffect(() => {
+        if (musicBand) {
+            setName(musicBand.name);
+            const coordinates = musicBand.coordinates;
+            setCoordinatesX(coordinates.x);
+            setCoordinatesY(coordinates.y);
+            setCoordinatesId(null);
+            setGenre(musicBand.genre);
+            setNumberOfParticipants(musicBand.numberOfParticipants);
+            setSinglesCount(musicBand.singlesCount);
+            setDescription(musicBand.description);
+
+            const bestAlbum = musicBand.bestAlbum;
+            if (bestAlbum === null) {
+                setBestAlbumName(null);
+                setBestAlbumLength(null);
+            } else {
+                setBestAlbumName(bestAlbum.name);
+                setBestAlbumLength(bestAlbum.length);
+            }
+            setBestAlbumId(null);
+            setAlbumsCount(musicBand.albumsCount);
+            setEstablishmentDate(musicBand.establishmentDate);
+
+            const studio = musicBand.studio;
+            if (studio === null) {
+                setStudioName(null);
+                setStudioAddress(null);
+            } else {
+                setStudioName(studio.name);
+                setStudioAddress(studio.address);
+            }
+            setStudioId(null);
+
+            setErrorMessage("");
+            setSuccessMessage("");
+        }
+    }, [musicBand]);
 
     const validate = useCallback(() => {
         if (!name || name.trim().length === 0) {
@@ -108,7 +150,7 @@ export function MusicBandCreateForm() {
             try {
                 let forRequestCoordinatesX = coordinatesX;
                 let forRequestCoordinatesY = coordinatesY;
-                let forRequestCoordinates: CoordinatesRequestCreate | null = null;
+                let forRequestCoordinates: CoordinatesRequestUpdate | null = null;
                 if (coordinatesId === null && forRequestCoordinatesX !== null && forRequestCoordinatesY !== null) {
                     forRequestCoordinates = {
                         x: forRequestCoordinatesX,
@@ -122,7 +164,7 @@ export function MusicBandCreateForm() {
 
                 let forRequestBestAlbumName = bestAlbumName;
                 let forRequestBestAlbumLength = bestAlbumLength;
-                let forRequestBestAlbum: AlbumRequestCreate | null = null;
+                let forRequestBestAlbum: AlbumRequestUpdate | null = null;
                 if (bestAlbumId === null && forRequestBestAlbumName !== null && forRequestBestAlbumLength !== null) {
                     forRequestBestAlbum = {
                         name: forRequestBestAlbumName,
@@ -136,7 +178,7 @@ export function MusicBandCreateForm() {
 
                 let forRequestStudioName = studioName;
                 let forRequestStudioAddress = studioAddress;
-                let forRequestStudio: StudioRequestCreate | null = null;
+                let forRequestStudio: StudioRequestUpdate | null = null;
                 if (studioId === null && forRequestStudioName !== null && forRequestStudioAddress !== null) {
                     forRequestStudio = {
                         name: forRequestStudioName,
@@ -148,7 +190,8 @@ export function MusicBandCreateForm() {
                     forRequestStudioAddress = null;
                 }
 
-                const params: ParamsForCreateMusicBand = {
+                const params: ParamsForUpdateMusicBand = {
+                    id: musicBand.id,
                     name: name,
                     coordinates: forRequestCoordinates,
                     coordinatesId: (coordinatesId === null)? null : Math.floor(coordinatesId),
@@ -163,10 +206,10 @@ export function MusicBandCreateForm() {
                     studio: forRequestStudio,
                     studioId: (studioId === null)? null : Math.floor(studioId),
                 };
-                await createMusicBand(params);
-                setSuccessMessage("Музыкальная группа успешно добавлена");
+                await updateMusicBand(params);
+                setSuccessMessage("Музыкальная группа успешно обновлена");
                 setErrorMessage("");
-                setTimeout(() => globalThis.location.assign("/"), 2000);
+                setTimeout(() => globalThis.location.reload(), 2000);
             } catch (error) {
                 if (import.meta.env.DEV) { console.log(error); }
                 if (isErrorMessage(error)) {
@@ -174,10 +217,11 @@ export function MusicBandCreateForm() {
                     setErrorMessage(message);
                     return;
                 }
-                setErrorMessage("Ошибка при добавлении");
+                setErrorMessage("Ошибка при обновлении");
             } finally { setLoading(false); }
         },
         [
+            musicBand,
             name,
             coordinatesX,
             coordinatesY,
@@ -231,7 +275,7 @@ export function MusicBandCreateForm() {
     return (
         <div className={styles.formWrapper}>
             <form className={styles.form} onSubmit={(e) => e?.preventDefault()}>
-                <h2 className={styles.title}>Добавление музыкальной группы</h2>
+                <h2 className={styles.title}>Обновление музыкальной группы</h2>
                 <div className={styles.field}>
                     <label className={styles.label} htmlFor="music-band-name">Название*</label>
                     <input
@@ -403,7 +447,7 @@ export function MusicBandCreateForm() {
                     </div>
                 </div>
                 <div className={styles.actions}>
-                    <Button onClick={handleSubmit} textButton={loading ? "Добавление..." : "Добавить"} disabled={loading} />
+                    <Button onClick={handleSubmit} textButton={loading ? "Обновление..." : "Обновить"} disabled={loading} />
                 </div>
                 <div className={styles.feedback}>
                     {errorMessage && <div className={clsx(styles.error)} role="alert">{errorMessage}</div>}

@@ -1,8 +1,8 @@
 import type { JSX } from "react";
-import type { MusicBand } from "~/types/musicBand/MusicBand";
-import styles from "./MusicBandTable.module.scss";
-import { MusicGenreDictionary } from "~/types/MusicGenre";
 import { Link } from "react-router";
+import type { MusicBand } from "~/types/musicBand/MusicBand";
+import { MusicGenreDictionary } from "~/types/MusicGenre";
+import styles from "./MusicBandTable.module.scss";
 
 interface MusicBandTableProps {
     musicBands: MusicBand[];
@@ -46,21 +46,23 @@ export const MusicBandTable = ({ musicBands } : MusicBandTableProps): JSX.Elemen
                         <td>{new Date(band.creationDate).toLocaleString("ru-RU")}</td>
                         <td>{new Date(band.establishmentDate).toLocaleDateString("ru-RU")}</td>
                         <td>{band.description || "-"}</td>
-                        <td>
+                        {band.coordinates && <td>
                             <Link to={`/coordinates/${band.coordinates.id}`}>
                                 x: {band.coordinates.x}, y: {band.coordinates.y}
                             </Link>
-                        </td>
-                        <td>
+                        </td>}
+                        {band.studio && <td>
                             <Link to={`/studios/${band.studio?.id}`}>
-                                {band.studio ? `${band.studio.name} (${band.studio.address})` : "-"}
+                                {`${band.studio.name} (${band.studio.address})`}
                             </Link>
-                        </td>
-                        <td>
+                        </td>}
+                        {!band.studio && <td>-</td>}
+                        {band.bestAlbum && <td>
                             <Link to={`/albums/${band.bestAlbum?.id}`}>
-                                {band.bestAlbum ? `${band.bestAlbum.name} (${band.bestAlbum.length} сек)` : "-"}
+                                {`${band.bestAlbum.name} (${band.bestAlbum.length} сек)`}
                             </Link>
-                        </td>
+                        </td>}
+                        {!band.studio && <td>-</td>}
                     </tr>
                 )
             )}

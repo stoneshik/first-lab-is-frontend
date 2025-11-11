@@ -1,25 +1,24 @@
 import { api } from "~/lib/axios";
-import type { Album } from "~/types/album/Album";
-import type { Coordinates } from "~/types/coordinates/Coordinates";
+import type { AlbumRequestUpdate } from "~/types/album/AlbumRequestUpdate";
+import type { CoordinatesRequestUpdate } from "~/types/coordinates/CoordinatesRequestUpdate";
 import { isErrorMessage } from "~/types/ErrorMessage";
 import type { MusicGenre } from "~/types/MusicGenre";
-import type { Studio } from "~/types/studio/Studio";
+import type { StudioRequestUpdate } from "~/types/studio/StudioRequestUpdate";
 
 export interface ParamsForUpdateMusicBand {
     id: number;
     name: string;
-    coordinates: Coordinates | null;
+    coordinates: CoordinatesRequestUpdate | null;
     coordinatesId: number | null;
-    creationDate: string;
     genre: MusicGenre | null;
     numberOfParticipants: number | null;
     singlesCount: number;
     description: string | null;
-    bestAlbum: Album | null;
+    bestAlbum: AlbumRequestUpdate | null;
     bestAlbumId: number | null;
     albumsCount: number;
     establishmentDate: string;
-    studio: Studio | null;
+    studio: StudioRequestUpdate | null;
     studioId: number | null;
 }
 
@@ -29,7 +28,6 @@ export const updateMusicBand = async (params: ParamsForUpdateMusicBand): Promise
             name: params.name,
             coordinates: params.coordinates,
             coordinatesId: params.coordinatesId,
-            creationDate: params.creationDate,
             genre: params.genre,
             numberOfParticipants: params.numberOfParticipants,
             singlesCount: params.singlesCount,

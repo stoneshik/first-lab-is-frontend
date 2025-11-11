@@ -72,12 +72,10 @@ export function StudioByIdPage() {
         <div className={styles.wrapper}>
             <h1>Студия</h1>
             <div className={styles.error}>{errorMessage}</div>
+            {!studio && <div className={styles.error}>Студия не найдена</div>}
             {studio && <StudioTable studios={[studio]} />}
             {studio && <StudioEditForm studio={studio} />}
-            <Button
-                className={styles.delete}
-                onClick={handlingDelete}
-                textButton={"❌ Удаление студии"} />
+            {studio && <Button className={styles.delete} onClick={handlingDelete} textButton={"❌ Удаление студии"} /> }
             {successMessage && <div className="success">{successMessage}</div>}
         </div>
     );

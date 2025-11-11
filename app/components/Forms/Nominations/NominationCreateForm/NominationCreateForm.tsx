@@ -72,7 +72,7 @@ export function NominationCreateForm() {
                 </select>
                 <h3>Выбранная муз. группа: { (musicBandId === 0)? "" : `${musicBandId} - ${musicBandName}`}</h3>
                 <div className={styles.actions}>
-                    <Button onClick={handleSubmit} textButton={loading ? "Сохранение..." : "Сохранить"} disabled={loading} />
+                    <Button onClick={handleSubmit} textButton={loading ? "Номинирование..." : "Номинировать"} disabled={loading} />
                 </div>
                 <div className={styles.feedback}>
                     {errorMessage && <div className={clsx(styles.error)} role="alert">{errorMessage}</div>}

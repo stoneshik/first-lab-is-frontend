@@ -45,7 +45,7 @@ export const MusicBandSelectTable = (
                 (band) => (
                     <tr
                         key={band.id}
-                        onClick={ (e) => handleClickOnSelectMusicBand(band.id, band.name) }>
+                        onClick={ (_) => handleClickOnSelectMusicBand(band.id, band.name) }>
                         <td className={ band.id === selectedBandId ? styles.active : "inactive" }>+</td>
                         <td>
                             <Link to={`/music-bands/${band.id}`}>

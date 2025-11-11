@@ -60,7 +60,7 @@ export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
     return (
         <div className={styles.formWrapper}>
             <form className={styles.form} onSubmit={(e) => e?.preventDefault()}>
-                <h2 className={styles.title}>Редактировать координаты</h2>
+                <h2 className={styles.title}>Обновить координаты</h2>
                 <div className={styles.field}>
                     <label className={styles.label} htmlFor="coordinates-x">x</label>
                     <input
@@ -86,7 +86,7 @@ export function CoordinatesEditForm({ coordinates }: Readonly<Props>) {
                         required />
                 </div>
                 <div className={styles.actions}>
-                    <Button onClick={handleSubmit} textButton={loading ? "Сохранение..." : "Сохранить"} disabled={loading} />
+                    <Button onClick={handleSubmit} textButton={loading ? "Обновление..." : "Обновить"} disabled={loading} />
                 </div>
                 <div className={styles.feedback}>
                     {errorMessage && <div className={clsx(styles.error)} role="alert">{errorMessage}</div>}
