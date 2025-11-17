@@ -9,10 +9,12 @@ export function MusicBandsPage() {
     return (
         <div className={styles.wrapper}>
             <MusicBandCreateForm />
-            <DeleteOneByEstablishmentDateForm />
-            <GetOneWithMinIdForm />
-            <GetBandsAfterEstablishmentForm />
-            <AddSingleToBandForm />
+            <div className={styles.formWrapper}>
+                <DeleteOneByEstablishmentDateForm />
+                <GetOneWithMinIdForm />
+                <GetBandsAfterEstablishmentForm />
+                <AddSingleToBandForm />
+            </div>
         </div>
     );
 }
