@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useCallback, useEffect, useState, type JSX } from "react";
+import { useParams } from "react-router-dom";
 
 import { deleteNomination } from "~/api/Nominations/DeleteNomination";
 import { getNominationById, type ParamsForGetNominationId } from "~/api/Nominations/GetNominationById";
@@ -9,7 +9,7 @@ import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/Err
 import type { Nomination } from "~/types/nomination/Nomination";
 import styles from "./NominationByIdPage.module.scss";
 
-export function NominationByIdPage() {
+export default function NominationByIdPage(): JSX.Element {
     const { id } = useParams<{ id: string }>();
     const [nomination, setNomination] = useState<Nomination | null>(null);
     const [successMessage, setSuccessMessage] = useState<string>("");

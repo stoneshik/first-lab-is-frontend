@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type JSX } from "react";
 
 import { getWrapperListStudio, type ParamsForGetWrapperListStudio } from "~/api/Studios/GetAllStudios";
 import { StudioCreateForm } from "~/components/Forms/Studios/StudioCreateForm/StudioCreateForm";
@@ -8,7 +8,7 @@ import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/Err
 import type { WrapperListStudio } from "~/types/studio/WrapperListStudio";
 import styles from "./StudiosListPage.module.scss";
 
-export function StudiosListPage() {
+export default function StudiosListPage(): JSX.Element {
     const [wrapperListStudio, setWrapperListStudio] = useState<WrapperListStudio | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [page, setPage] = useState<number>(0);

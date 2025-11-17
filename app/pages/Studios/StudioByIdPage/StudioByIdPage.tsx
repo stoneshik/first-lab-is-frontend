@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useCallback, useEffect, useState, type JSX } from "react";
+import { useParams } from "react-router-dom";
 
 import { deleteStudio } from "~/api/Studios/DeleteStudio";
 import { getStudioById, type ParamsForGetStudioId } from "~/api/Studios/GetStudioById";
@@ -10,7 +10,7 @@ import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/Err
 import type { Studio } from "~/types/studio/Studio";
 import styles from "./StudioByIdPage.module.scss";
 
-export function StudioByIdPage() {
+export default function StudioByIdPage(): JSX.Element {
     const { id } = useParams<{ id: string }>();
     const [studio, setStudio] = useState<Studio | null>(null);
     const [successMessage, setSuccessMessage] = useState<string>("");

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type JSX } from "react";
 
 import type { ParamsForGetWrapperListMusicBand } from "~/api/MusicBands/GetAllMusicBands";
 import { getWrapperListMusicBand } from "~/api/MusicBands/GetAllMusicBands";
@@ -9,9 +9,9 @@ import type { WrapperListMusicBand } from "~/types/musicBand/WrapperListMusicBan
 import { MusicGenre, MusicGenreDictionary } from "~/types/MusicGenre";
 import { SortNameField, SortNameFieldDictionary } from "~/types/SortNameField";
 import { SortOrder, SortOrderDictionary } from "~/types/SortOrder";
-import styles from "./HomeContent.module.scss";
+import styles from "./HomePage.module.scss";
 
-export function HomeContent() {
+export default function HomePage(): JSX.Element {
     const [wrapperListMusicBand, setWrapperListMusicBand] = useState<WrapperListMusicBand | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [name, setName] = useState<string>("");

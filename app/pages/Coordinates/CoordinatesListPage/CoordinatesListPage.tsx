@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type JSX } from "react";
 
 import { getWrapperListCoordinates, type ParamsForGetWrapperListCoordinates } from "~/api/Coordinates/GetAllCoordinates";
+import { CoordinatesCreateForm } from "~/components/Forms/Coordinates/CoordinatesCreateForm/CoordinatesCreateForm";
 import { CoordinatesTable } from "~/components/Tables/Coordinates/CoordinatesTable/CoordinatesTable";
 import { Button } from "~/components/UI/Button/Button";
 import type { WrapperListCoordinates } from "~/types/coordinates/WrapperListCoordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import styles from "./CoordinatesListPage.module.scss";
-import { CoordinatesCreateForm } from "~/components/Forms/Coordinates/CoordinatesCreateForm/CoordinatesCreateForm";
 
-export function CoordinatesListPage() {
+export default function CoordinatesListPage(): JSX.Element {
     const [wrapperListCoordinates, setWrapperListCoordinates] = useState<WrapperListCoordinates | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [page, setPage] = useState<number>(0);

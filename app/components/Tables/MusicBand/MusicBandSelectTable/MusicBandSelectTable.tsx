@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import type { MusicBand } from "~/types/musicBand/MusicBand";
 import { MusicGenreDictionary } from "~/types/MusicGenre";
 import styles from "./MusicBandSelectTable.module.scss";

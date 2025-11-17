@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import type { Coordinates } from "~/types/coordinates/Coordinates";
 import styles from "./CoordinatesTable.module.scss";
 
