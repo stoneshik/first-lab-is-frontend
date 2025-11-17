@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type JSX } from "react";
 
 import { getWrapperListNomination, type ParamsForGetWrapperListNomination } from "~/api/Nominations/GetAllNominations";
+import { NominationCreateForm } from "~/components/Forms/Nominations/NominationCreateForm/NominationCreateForm";
 import { NominationTable } from "~/components/Tables/Nomination/NominationTable/NominationTable";
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import type { WrapperListNomination } from "~/types/nomination/WrapperListNomination";
 import styles from "./NominationsListPage.module.scss";
-import { NominationCreateForm } from "~/components/Forms/Nominations/NominationCreateForm/NominationCreateForm";
 
-export function NominationsListPage() {
+export default function NominationsListPage(): JSX.Element {
     const [wrapperListNomination, setWrapperListNomination] = useState<WrapperListNomination | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [page, setPage] = useState<number>(0);

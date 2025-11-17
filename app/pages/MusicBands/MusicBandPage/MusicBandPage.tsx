@@ -1,16 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useCallback, useEffect, useState, type JSX } from "react";
+import { useParams } from "react-router-dom";
 import type { MusicBand } from "~/types/musicBand/MusicBand";
 
 import { deleteMusicBand } from "~/api/MusicBands/DeleteMusicBand";
 import { getMusicBandById, type ParamsForGetMusicBandId } from "~/api/MusicBands/GetMusicBandById";
+import { MusicBandEditForm } from "~/components/Forms/MusicBands/MusicBandEditForm/MusicBandEditForm";
 import { MusicBandTable } from "~/components/Tables/MusicBand/MusicBandTable/MusicBandTable";
 import { Button } from "~/components/UI/Button/Button";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
-import styles from "./MusicBandContent.module.scss";
-import { MusicBandEditForm } from "~/components/Forms/MusicBands/MusicBandEditForm/MusicBandEditForm";
+import styles from "./MusicBandPage.module.scss";
 
-export function MusicBandContent() {
+export default function MusicBandPage(): JSX.Element {
     const { id } = useParams<{ id: string }>();
     const [musicBand, setMusicBand] = useState<MusicBand | null>(null);
     const [successMessage, setSuccessMessage] = useState<string>("");

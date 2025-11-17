@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useCallback, useEffect, useState, type JSX } from "react";
+import { useParams } from "react-router-dom";
 
 import { deleteAlbum } from "~/api/Albums/DeleteAlbum";
 import { getAlbumById, type ParamsForGetAlbumId } from "~/api/Albums/GetAlbumById";
@@ -10,7 +10,7 @@ import type { Album } from "~/types/album/Album";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import styles from "./AlbumByIdPage.module.scss";
 
-export function AlbumByIdPage() {
+export default function AlbumByIdPage(): JSX.Element {
     const { id } = useParams<{ id: string }>();
     const [album, setAlbum] = useState<Album | null>(null);
     const [successMessage, setSuccessMessage] = useState<string>("");

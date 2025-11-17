@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import type { Album } from "~/types/album/Album";
 import styles from "./AlbumTable.module.scss";
 

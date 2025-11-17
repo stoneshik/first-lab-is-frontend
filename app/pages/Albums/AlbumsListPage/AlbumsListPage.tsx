@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type JSX } from "react";
 
 import { getWrapperListAlbum, type ParamsForGetWrapperListAlbum } from "~/api/Albums/GetAllAlbums";
+import { AlbumCreateForm } from "~/components/Forms/Albums/AlbumCreateForm/AlbumCreateForm";
 import { AlbumTable } from "~/components/Tables/Album/AlbumTable/AlbumTable";
 import { Button } from "~/components/UI/Button/Button";
 import type { WrapperListAlbum } from "~/types/album/WrapperListAlbum";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import styles from "./AlbumsListPage.module.scss";
-import { AlbumCreateForm } from "~/components/Forms/Albums/AlbumCreateForm/AlbumCreateForm";
 
-export function AlbumsListPage() {
+export default function AlbumsListPage(): JSX.Element {
     const [wrapperListAlbum, setWrapperListAlbum] = useState<WrapperListAlbum | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [page, setPage] = useState<number>(0);

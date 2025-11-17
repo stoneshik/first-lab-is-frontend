@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useCallback, useEffect, useState, type JSX } from "react";
+import { useParams } from "react-router-dom";
 
 import { deleteCoordinates } from "~/api/Coordinates/DeleteCoordinates";
 import { getCoordinatesById, type ParamsForGetCoordinatesId } from "~/api/Coordinates/GetCoordinatesById";
@@ -10,7 +10,7 @@ import type { Coordinates } from "~/types/coordinates/Coordinates";
 import { createMessageStringFromErrorMessage, isErrorMessage } from "~/types/ErrorMessage";
 import styles from "./CoordinatesByIdPage.module.scss";
 
-export function CoordinatesByIdPage() {
+export default function CoordinatesByIdPage(): JSX.Element {
     const { id } = useParams<{ id: string }>();
     const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
     const [successMessage, setSuccessMessage] = useState<string>("");
